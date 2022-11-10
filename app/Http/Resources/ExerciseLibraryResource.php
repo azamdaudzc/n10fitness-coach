@@ -53,12 +53,12 @@ class ExerciseLibraryResource extends JsonResource
                 <a class="dropdown-item delete_record" data-id="' . $library->id . '" href="javascript:void(0);">Delete</a>
                 </li> </ul>
                 </div>';
-                $status='<div class="badge badge-light-success h-40px">Processing</div>';
+                $status='<div class="badge badge-light-primary h-40px">Processing</div>';
                 if($library->approved_by>0){
                     $status='<div class="badge badge-light-success h-40px">Approved</div>';
                 }
                 else if($library->rejected_by>0){
-                    $status='<div class="badge badge-light-success h-40px">Rejected</div>';
+                    $status='<div class="badge badge-light-danger h-40px">Rejected</div>';
                 }
                 $video_link = '<a target="_blank" href="'.$library->video_link.'">'.$library->video_link.'</a>';
                 $description=$library->description;

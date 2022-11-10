@@ -14,10 +14,17 @@ Users
                     <div class="d-flex align-items-center position-relative my-1">
                         <i class="fa-solid fa-magnifying-glass position-absolute ms-6"></i>
                         <input type="text" data-kt-user-table-filter="search" id="search_table_1"
-                        class="form-control form-control-solid w-250px ps-14" placeholder="Search Question" />
+                        class="form-control form-control-solid w-250px ps-14" placeholder="Search Library" />
                     </div>
                 </div>
+                <div class="card-toolbar">
 
+                    <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+                        <a type="button" class="btn btn-primary" href="{{ route('exerciselibrary.create-edit') }}">
+                            <i class="fa-solid fa-plus fs-2"></i>Create New
+                        </a>
+                    </div>
+                </div>
             </div>
         <div class="card-body py-4">
         <table class="table align-middle table-row-dashed fs-6 gy-5" id="approved_table">

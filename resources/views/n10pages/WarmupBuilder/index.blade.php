@@ -13,7 +13,7 @@
                         <div class="d-flex align-items-center position-relative my-1">
                             <i class="fa-solid fa-magnifying-glass position-absolute ms-6"></i>
                             <input type="text" data-kt-user-table-filter="search" id="search_table"
-                                class="form-control form-control-solid w-250px ps-14" placeholder="Search Question" />
+                                class="form-control form-control-solid w-250px ps-14" placeholder="Search Warmup" />
                         </div>
                     </div>
                     <div class="card-toolbar">

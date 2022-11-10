@@ -43,12 +43,12 @@ class WarmupBuilderResource extends JsonResource
                             </div>
                 ';
 
-                $status='<div class="badge badge-light-success h-40px">Processing</div>';
+                $status='<div class="badge badge-light-primary h-40px">Processing</div>';
                 if($setting->approved_by>0){
                     $status='<div class="badge badge-light-success h-40px">Approved</div>';
                 }
                 else if($setting->rejected_by>0){
-                    $status='<div class="badge badge-light-success h-40px">Rejected</div>';
+                    $status='<div class="badge badge-light-danger h-40px">Rejected</div>';
                 }
                 $settings[] = [
                     'status' => $status,

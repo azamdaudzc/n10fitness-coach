@@ -279,7 +279,7 @@
                         console.log(d);
                         if (d.success == true) {
                             toastr.success(d.msg);
-                            window.location.href="{{route('exerciselibrary.index')}";
+                            window.location.href="{{route('exerciselibrary.index')}}";
                         }
                         $('#crud-form-submit-button').attr("data-kt-indicator", "off");
 

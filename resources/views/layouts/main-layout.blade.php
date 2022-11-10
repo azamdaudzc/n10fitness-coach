@@ -173,11 +173,11 @@
     </div>
 
 
-    @include('includes.drawers')
+   {{--  @include('includes.drawers')--}}
 
 
     <!--end::Scrolltop-->
-    @include('includes.modals')
+   {{--@include('includes.modals') --}}
     <!--begin::Javascript-->
     <script>
         var hostUrl = "assets/";

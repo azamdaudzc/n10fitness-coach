@@ -13,7 +13,7 @@
             <!--begin::Menu wrapper-->
             <div class="cursor-pointer position-relative symbol symbol-circle symbol-40px" data-kt-menu-trigger="{default: 'click', lg: 'hover'}" data-kt-menu-attach="parent" data-kt-menu-placement="bottom-end">
                 @if(Auth::user()->avatar!=null)
-                <img alt="Logo" src="{{asset('storage/').'/'.Auth::user()->avatar}}" style=" object-fit: cover;"  />
+                <img alt="Logo" src="{{Auth::user()->avatar}}" style=" object-fit: cover;"  />
                 @else
                 <img alt="Logo" src="{{asset('assets/media/avatars/300-2.jpg')}}" />
 
@@ -28,7 +28,7 @@
                         <!--begin::Avatar-->
                         <div class="symbol symbol-50px me-5">
                             @if(Auth::user()->avatar!=null)
-                            <img alt="Logo" src="{{asset('storage/').'/'.Auth::user()->avatar}}" style=" object-fit: cover;"  />
+                            <img alt="Logo" src="{{Auth::user()->avatar}}" style=" object-fit: cover;"  />
                             @else
                             <img alt="Logo" src="{{asset('assets/media/avatars/300-2.jpg')}}" />
 
@@ -51,7 +51,7 @@
                 <!--end::Menu separator-->
                 <!--begin::Menu item-->
                 <div class="menu-item px-5">
-                    <a href="#" class="menu-link px-5">My Profile</a>
+                    <a href="{{route('user.coach.profile')}}" class="menu-link px-5">My Profile</a>
                 </div>
                 <!--end::Menu item-->
 
@@ -61,17 +61,6 @@
                 </div>
                 <!--end::Menu item-->
 
-
-
-
-
-
-
-                <!--begin::Menu item-->
-                <div class="menu-item px-5">
-                    <a href="../../demo23/dist/authentication/layouts/corporate/sign-in.html" class="menu-link px-5">Sign Out</a>
-                </div>
-                <!--end::Menu item-->
             </div>
             <!--end::User account menu-->
             <!--end::Menu wrapper-->

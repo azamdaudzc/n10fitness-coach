@@ -1,9 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\N10Controllers\ExerciseLibraryController;
-use App\Http\Controllers\CheckIns\UserCheckinQuestionsController;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\N10Controllers\WarmupBuilderController;
+use App\Http\Controllers\UserControllers\UserCoachController;
+use App\Http\Controllers\N10Controllers\ExerciseLibraryController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -16,7 +17,13 @@ use App\Http\Controllers\N10Controllers\WarmupBuilderController;
 */
 
 
+Route::get('/linkstorage', function () {
+    Artisan::call('storage:link');
+});
 
+Route::get('/migratedatabase', function () {
+    Artisan::call('migrate:fresh --seed');
+});
 
 Route::middleware(['auth','check_user_type','verified'])->group(function () {
 
@@ -53,6 +60,14 @@ Route::middleware(['auth','check_user_type','verified'])->group(function () {
         Route::post('exerciselibrary/approve', 'approve')->name('exerciselibrary.approve');
         Route::post('exerciselibrary/reject', 'reject')->name('exerciselibrary.reject');
         Route::get('exerciselibrary/view/{id?}', 'view')->name('exerciselibrary.view');
+    });
+
+    Route::controller(UserCoachController::class)->group(function(){
+          Route::get('user/coach/profile', 'profile')->name('user.coach.profile');
+          Route::post('user/coach/details', 'details')->name('user.coach.details');
+          Route::post('user/coach/info', 'info')->name('user.coach.info');
+          Route::post('user/coach/store', 'store')->name('user.coach.store');
+
     });
 });
 
