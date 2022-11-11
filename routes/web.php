@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\N10Controllers\WarmupBuilderController;
+use App\Http\Controllers\N10Controllers\CoachClientController;
 use App\Http\Controllers\N10Controllers\ProgramBuilderController;
 use App\Http\Controllers\UserControllers\UserCoachController;
 use App\Http\Controllers\N10Controllers\ExerciseLibraryController;
@@ -47,6 +48,12 @@ Route::middleware(['auth','check_user_type','verified'])->group(function () {
         Route::post('warmup/builder/store','store')->name('warmup.builder.store');
         Route::get('warmup/builder/view/{id?}', 'view')->name('warmup.builder.view');
         Route::post('warmup/builder/delete', 'delete')->name('warmup.builder.delete');
+
+    });
+
+    Route::controller(CoachClientController::class)->group(function(){
+        Route::get('coach/client/lists', 'list')->name('coach.client.list');
+        Route::get('coach/client/index','index')->name('coach.client.index');
 
     });
 

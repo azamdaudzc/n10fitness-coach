@@ -124,6 +124,10 @@
             height: 100%;
 
         }
+        .image-input-wrapper{
+            background-repeat: no-repeat !important;
+            background-size: contain !important;
+        }
     </style>
 
 </head>

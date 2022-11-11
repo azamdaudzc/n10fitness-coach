@@ -153,6 +153,22 @@
                      <!--begin::Col-->
                      <div class="col mb-4">
                         <!--begin::Link-->
+                        <a href="{{route('coach.client.index')}}" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-90px h-90px border-gray-200 menu-link" data-kt-button="true">
+                            <!--begin::Icon-->
+                            <span class="mb-2">
+                                <i class="fa-solid fa-user fs-2"></i>
+                            </span>
+                            <!--end::Icon-->
+                            <!--begin::Label-->
+                            <span class="fs-7 fw-bold">Assigned Clients</span>
+                            <!--end::Label-->
+                        </a>
+                        <!--end::Link-->
+                    </div>
+                    <!--end::Col-->
+                     <!--begin::Col-->
+                     <div class="col mb-4">
+                        <!--begin::Link-->
                         <a href="{{route('program.builder.index')}}" class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-90px h-90px border-gray-200 menu-link" data-kt-button="true">
                             <!--begin::Icon-->
                             <span class="mb-2">
