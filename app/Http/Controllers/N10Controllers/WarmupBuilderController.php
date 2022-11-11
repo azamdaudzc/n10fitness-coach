@@ -21,7 +21,7 @@ class WarmupBuilderController extends Controller
 
     public function list()
     {
-        $users = WarmupBuilder::with('user')->get();
+        $users = WarmupBuilder::with('user')->where('created_by',Auth::user()->id)->orWhere('approved_by','>',0)->get();
         return new WarmupBuilderResource($users);
     }
 
@@ -62,6 +62,9 @@ class WarmupBuilderController extends Controller
 
         if (isset($request->id)) {
             $warmup = WarmupBuilder::find($request->id);
+            if($warmup->created_by != Auth::user()->id){
+                return response()->json(['success' => true, 'msg' => 'This is not created by you to edit']);
+            }
             request()->validate(WarmupBuilder::$rules);
             $warmup->update($request->all());
 
@@ -122,6 +125,10 @@ class WarmupBuilderController extends Controller
 
     public function delete(Request $request)
     {
+        $warmup = WarmupBuilder::find($request->id);
+        if($warmup->created_by != Auth::user()->id){
+            return response()->json(['success' => true, 'msg' => 'This is not created by you to delete']);
+        }
         WarmupVideo::where('warmup_builder_id', $request->id)->delete();
         $athletictype = WarmupBuilder::find($request->id)->delete();
         return response()->json(['success' => true, 'msg' => 'Question Deleted']);

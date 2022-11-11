@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class ExerciseLibraryResource extends JsonResource
@@ -39,16 +40,22 @@ class ExerciseLibraryResource extends JsonResource
                                 Action
                               </button>
                               <ul class="dropdown-menu" aria-labelledby="actionsMenu">
-                                <li >
-                                    <a class="dropdown-item " data-id="' . $library->id . '" href="'.route('exercise.library.create-edit',$library->id).'" >Edit</a>
-                                </li>
+
                                 <li >
                                     <a class="dropdown-item create_new_off_canvas_modal view_record" data-id="' . $library->id . '" href="javascript:void(0);" >View</a>
                                 </li>
 
 
                 ';
-
+                if($library->created_by==Auth::user()->id){
+                    $actions.='<li >
+                    <a class="dropdown-item " data-id="' . $library->id . '" href="'.route('exercise.library.create-edit',$library->id).'" >Edit</a>
+                    </li>
+                    <li>
+                    <a class="dropdown-item delete_record" data-id="' . $library->id . '" href="javascript:void(0);">Delete</a>
+                    </li> ';
+                }
+                $actions.=' </ul></div>';
                 $creator = '<div class="d-flex align-items-center">
                 <div class="symbol symbol-35px symbol-circle">
                         <img alt="Pic" src="' . $creatorPicture . '"
@@ -61,18 +68,15 @@ class ExerciseLibraryResource extends JsonResource
                 <!--end::Details-->
                 </div>';
 
-                $actions.='<li>
-                <a class="dropdown-item delete_record" data-id="' . $library->id . '" href="javascript:void(0);">Delete</a>
-                </li> </ul>
-                </div>';
-                $status='<div class="badge badge-light-primary h-40px">Processing</div>';
+
+                $status='<div class="badge badge-light-warning ">Processing</div>';
                 if($library->approved_by>0){
-                    $status='<div class="badge badge-light-success h-40px">Approved</div>';
+                    $status='<div class="badge badge-light-success ">Approved</div>';
                 }
                 else if($library->rejected_by>0){
-                    $status='<div class="badge badge-light-danger h-40px">Rejected</div>';
+                    $status='<div class="badge badge-light-danger ">Rejected</div>';
                 }
-                $video_link = '<a target="_blank" href="'.$library->video_link.'">'.$library->video_link.'</a>';
+                $video_link = '<a target="_blank" href="'.$library->video_link.'"><i class="fa fa-external-link"></i></a>';
                 $description=$library->description;
                 $librarys[] = [
                     'user' => $libraryAvatar,

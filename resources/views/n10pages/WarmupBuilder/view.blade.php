@@ -55,20 +55,19 @@
 
         <div class="d-flex flex-column">
             <h2 class="mb-1">Warmup Videos</h2>
-            @foreach ($videos as $lm)
-            <div class="text-muted fw-bold">
 
+            @foreach ($videos as $lm)
+
+            <div class="warmupvideo-container">
+
+                <img src="{{  $lm->thumbnail }}" class=" mt-3  w-100 h-80 warmupvideo-image" />
+
+                <div class="warmupvideo-overlay"></div>
                 <a href="{{ $lm->video_url }}" target="_blank">
-                    <div class="warmupvideo-container">
-                        <div class="warmupvideo-top"></div>
-                        <img src="{{  $lm->thumbnail }}" class=" mt-3  w-100 h-80 warmupvideo-image" />
-                        <div class="warmupvideo-middle">
-                            <img src="{{asset('assets/media/sample/video-play-icon.png')}}" class="warmupvideo-text" alt="">
-                        </div>
-                    </div>
-                </a>
-            </div>
-            @endforeach
+                <div class="warmupvideo-button"><img src="{{asset('assets/media/sample/video-play-icon.png')}}" class="warmupvideo-text" alt="">
+                </div></a>
+              </div>
+              @endforeach
 
         </div>
     </div>

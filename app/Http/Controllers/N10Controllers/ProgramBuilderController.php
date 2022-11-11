@@ -22,7 +22,7 @@ class ProgramBuilderController extends Controller
 
     public function list()
     {
-        $users = ProgramBuilder::all();
+        $users = ProgramBuilder::where('created_by',Auth::user()->id)->orWhere('approved_by','>',0)->get();
         return new ProgramBuilderResource($users);
     }
 
@@ -65,6 +65,9 @@ class ProgramBuilderController extends Controller
 
         if (isset($request->id)) {
             $program = ProgramBuilder::find($request->id);
+            if($program->created_by != Auth::user()->id){
+                return response()->json(['success' => true, 'msg' => 'This is not created by you to edit']);
+            }
             request()->validate(ProgramBuilder::$rules);
             $program->update($request->all());
 
@@ -125,6 +128,10 @@ class ProgramBuilderController extends Controller
 
     public function delete(Request $request)
     {
+        $program = ProgramBuilder::find($request->id);
+            if($program->created_by != Auth::user()->id){
+                return response()->json(['success' => true, 'msg' => 'This is not created by you to delete']);
+            }
         // ProgramVideo::where('program_builder_id', $request->id)->delete();
         $athletictype = ProgramBuilder::find($request->id)->delete();
         return response()->json(['success' => true, 'msg' => 'Question Deleted']);

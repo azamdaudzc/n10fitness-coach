@@ -19,7 +19,7 @@ class CoachClientResource extends JsonResource
         if ($this->resource->count() > 0) {
             foreach ($this->resource as $setting) {
                 $athletic_type = $setting->user->userAthleticType->name;
-                $age = $setting->user->age;
+                $age = $setting->user->age.' Years';
                 $height = $setting->user->height;
                 $gender = $setting->user->gender;
                 $creatorPicture = $setting->user->avatar != null ?  $setting->user->avatar : asset('/assets/media/avatars/blank.png');
@@ -29,7 +29,7 @@ class CoachClientResource extends JsonResource
                 $client = '<div class="d-flex align-items-center">
                 <div class="symbol symbol-35px symbol-circle">
                         <img alt="Pic" src="' . $creatorPicture . '"
-                             style=" object-fit: cover;"/>
+                        style=" object-fit: cover;"/>
                 </div>
                 <div class="text-gray-800 text-hover-primary mb-1 ms-5">
                     ' . $setting->user->first_name.' '. $setting->user->last_name. '

@@ -49,7 +49,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Video Url:</label>
                                         <input type="text" name="video_url" class="form-control mb-2 mb-md-0"
-                                            placeholder="Video Url" value="{{$wv->video_url}}" />
+                                            placeholder="https://youtube.com" value="{{$wv->video_url}}" />
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Thumbnail:</label>
@@ -78,7 +78,7 @@
                                     <div class="col-md-3">
                                         <label class="form-label">Video Url:</label>
                                         <input type="text" name="video_url" class="form-control mb-2 mb-md-0"
-                                            placeholder="Video Url" />
+                                            placeholder="https://youtube.com" />
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Thumbnail:</label>

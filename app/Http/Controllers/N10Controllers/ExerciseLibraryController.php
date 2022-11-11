@@ -27,7 +27,7 @@ class ExerciseLibraryController extends Controller
     public function list(Request $request)
     {
         $librarys = null;
-        $librarys = ExerciseLibrary::with('exerciseCategory','exerciseCreator')->get();
+        $librarys = ExerciseLibrary::with('exerciseCategory','exerciseCreator')->where('created_by',Auth::user()->id)->orWhere('approved_by','>',0)->get();
 
         return new ExerciseLibraryResource($librarys);
     }
@@ -94,7 +94,9 @@ class ExerciseLibraryController extends Controller
         if (isset($request->id)) {
             request()->validate(ExerciseLibrary::rules($request->id));
             $library = ExerciseLibrary::find($request->id);
-
+            if($library->created_by != Auth::user()->id){
+                return response()->json(['success' => true, 'msg' => 'This is not created by you to edit']);
+            }
             if ($request->hasFile('avatar')) {
                 $newavatar = $this->updateprofile($request, 'avatar');
                 unset($request['avatar']);
@@ -159,19 +161,13 @@ class ExerciseLibraryController extends Controller
 
     public function delete(Request $request)
     {
+        $library = ExerciseLibrary::find($request->id);
+        if($library->created_by != Auth::user()->id){
+            return response()->json(['success' => true, 'msg' => 'This is not created by you to delete']);
+        }
         $library = ExerciseLibrary::find($request->id)->delete();
         return response()->json(['success' => true, 'msg' => 'Exercise Library Deleted']);
     }
 
-    public function approve(Request $request)
-    {
-        $exerciseLibrary = ExerciseLibrary::find($request->id)->update(['approved_by' => Auth::user()->id, 'rejected_by' => 0]);
-        return response()->json(['success' => true, 'msg' => 'Exercise Library Approved']);
-    }
 
-    public function reject(Request $request)
-    {
-        $exerciseLibrary = ExerciseLibrary::find($request->id)->update(['rejected_by' => Auth::user()->id, 'approved_by' => 0]);
-        return response()->json(['success' => true, 'msg' => 'Exercise Library Rejected']);
-    }
 }

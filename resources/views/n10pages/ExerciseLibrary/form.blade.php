@@ -75,7 +75,7 @@
 
                                 <div class="mb-10">
                                     <label for="video_link" class="form-label">Video Link</label>
-                                    <input class="form-control" placeholder="Video Link" name="video_link" type="text"
+                                    <input class="form-control" placeholder="https://youtube.com" name="video_link" type="text"
                                         id="video_link" value="{{ $library->video_link }}">
                                 </div>
 
