@@ -19,6 +19,7 @@ class ExerciseLibraryResource extends JsonResource
         if ($this->resource->count() > 0) {
             foreach ($this->resource as $library) {
                 $picture = $library->avatar != null ?  $library->avatar : asset('/assets/media/avatars/blank.png');
+                $creatorPicture = $library->exerciseCreator->avatar != null ?  $library->exerciseCreator->avatar : asset('/assets/media/avatars/blank.png');
                 $libraryAvatar = '<div class="d-flex align-items-center">
                             <div class="symbol symbol-35px symbol-circle">
                                     <img alt="Pic" src="' . $picture . '"
@@ -39,7 +40,7 @@ class ExerciseLibraryResource extends JsonResource
                               </button>
                               <ul class="dropdown-menu" aria-labelledby="actionsMenu">
                                 <li >
-                                    <a class="dropdown-item " data-id="' . $library->id . '" href="'.route('exerciselibrary.create-edit',$library->id).'" >Edit</a>
+                                    <a class="dropdown-item " data-id="' . $library->id . '" href="'.route('exercise.library.create-edit',$library->id).'" >Edit</a>
                                 </li>
                                 <li >
                                     <a class="dropdown-item create_new_off_canvas_modal view_record" data-id="' . $library->id . '" href="javascript:void(0);" >View</a>
@@ -48,6 +49,17 @@ class ExerciseLibraryResource extends JsonResource
 
                 ';
 
+                $creator = '<div class="d-flex align-items-center">
+                <div class="symbol symbol-35px symbol-circle">
+                        <img alt="Pic" src="' . $creatorPicture . '"
+                             style=" object-fit: cover;"/>
+                </div>
+                <div class="text-gray-800 text-hover-primary mb-1 ms-5">
+                    ' . $library->exerciseCreator->first_name. ' '.$library->exerciseCreator->last_name . '
+
+                </div>
+                <!--end::Details-->
+                </div>';
 
                 $actions.='<li>
                 <a class="dropdown-item delete_record" data-id="' . $library->id . '" href="javascript:void(0);">Delete</a>
@@ -68,7 +80,9 @@ class ExerciseLibraryResource extends JsonResource
                     'video_link' => $video_link,
                     'description' => $description,
                     'createdAt' => Carbon::createFromFormat('Y-m-d H:i:s', $library->created_at)->format('d M, Y h:i A'),
-                    'actions' => $actions
+                    'actions' => $actions,
+                    'creator' => $creator
+
                 ];
             }
         }

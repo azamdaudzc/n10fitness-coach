@@ -213,7 +213,7 @@
     @yield('scripts')
 
     <script>
-        $(function() {
+         $(function() {
             var current = location.pathname;
             if (current != '/') {
                 $('.menu-link').removeClass('active');
@@ -227,6 +227,8 @@
                 if (current != '/') {
 
                     if ($this.attr('href')) {
+                            var splitted=current.split("/");
+                            current='/'+splitted[1]+'/'+splitted[2];
                         if ($this.attr('href').indexOf(current) !== -1) {
                             $this.addClass('active');
                             $this.parent().parent().parent().addClass('here');

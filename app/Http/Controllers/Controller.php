@@ -25,8 +25,9 @@ class Controller extends BaseController
             $imageName = $imagePath->getClientOriginalName();
             $path = $request->file($file)->storeAs('public/profileimage', time() . $imageName);
             $path = str_replace('public/', '', $path);
+            $path=url('/').'/storage'.'/'.$path;
         }
-        return url('/').'/storage'.'/'.$path;
+        return $path;
     }
 
 
@@ -43,8 +44,9 @@ class Controller extends BaseController
             $imageName = $imagePath->getClientOriginalName();
             $path = $file->storeAs('public/thumbnailimage', time() . $imageName);
             $path = str_replace('public/', '', $path);
+            $path=url('/').'/storage'.'/'.$path;
         }
-        return url('/').'/storage'.'/'.$path;
+        return $path;
     }
 
 

@@ -27,7 +27,7 @@ class ExerciseLibraryController extends Controller
     public function list(Request $request)
     {
         $librarys = null;
-        $librarys = ExerciseLibrary::with('exerciseCategory')->where('created_by',Auth::user()->id)->get();
+        $librarys = ExerciseLibrary::with('exerciseCategory','exerciseCreator')->get();
 
         return new ExerciseLibraryResource($librarys);
     }

@@ -21,7 +21,7 @@ class WarmupBuilderController extends Controller
 
     public function list()
     {
-        $users = WarmupBuilder::where('created_by',Auth::user()->id)->get();
+        $users = WarmupBuilder::with('user')->get();
         return new WarmupBuilderResource($users);
     }
 

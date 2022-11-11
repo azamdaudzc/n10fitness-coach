@@ -13,13 +13,13 @@
                         <div class="d-flex align-items-center position-relative my-1">
                             <i class="fa-solid fa-magnifying-glass position-absolute ms-6"></i>
                             <input type="text" data-kt-user-table-filter="search" id="search_table"
-                                class="form-control form-control-solid w-250px ps-14" placeholder="Search Warmup" />
+                                class="form-control form-control-solid w-250px ps-14" placeholder="Search program" />
                         </div>
                     </div>
                     <div class="card-toolbar">
 
                         <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                            <a type="button" class="btn btn-primary" href="{{ route('warmup.builder.create-edit') }}">
+                            <a type="button" class="btn btn-primary" href="{{ route('program.builder.create-edit') }}">
                                 <i class="fa-solid fa-plus fs-2"></i>Create New
                             </a>
                         </div>
@@ -31,7 +31,7 @@
                             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                                 <th>Name</th>
                                 <th>Description</th>
-                                <th>Creator</th>
+                                <th>Instruction</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -62,7 +62,7 @@
             $('body').on('click', '.view_record', function() {
                 let id = $(this).attr('data-id');
                 form_body.empty();
-                $.post('{{ route('warmup.builder.details') }}', {
+                $.post('{{ route('program.builder.details') }}', {
                     _token: '{{ csrf_token() }}',
                     id
                 }, function(d) {
@@ -73,7 +73,7 @@
                 pageLength: 50,
                 lenghtChange: false,
                 ajax: {
-                    url: "{{ route('warmup.builder.list') }}",
+                    url: "{{ route('program.builder.list') }}",
                 },
                 columns: [{
                         data: 'name'
@@ -81,9 +81,8 @@
                     {
                         data: 'description'
                     },
-
                     {
-                        data: 'creator'
+                        data: 'instructions'
                     },
                     {
                         data: 'status'
@@ -126,7 +125,7 @@
                     }
                 }).then(function(data) {
                     if (data.isConfirmed == true) {
-                        $.post('{{ route('warmup.builder.delete') }}', {
+                        $.post('{{ route('program.builder.delete') }}', {
                             _token: '{{ csrf_token() }}',
                             id
                         }, function(d) {

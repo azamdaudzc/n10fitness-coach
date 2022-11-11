@@ -17,7 +17,7 @@
                         </div>
                         <div class="card-body py-5">
 
-                            <form method="POST" id="crud-form" action="{{ route('exerciselibrary.store') }}" role="form"
+                            <form method="POST" id="crud-form" action="{{ route('exercise.library.store') }}" role="form"
                                 enctype="multipart/form-data">
                                 @csrf
                                 @if ($library)
@@ -279,7 +279,7 @@
                         console.log(d);
                         if (d.success == true) {
                             toastr.success(d.msg);
-                            window.location.href="{{route('exerciselibrary.index')}}";
+                            window.location.href="{{route('exercise.library.index')}}";
                         }
                         $('#crud-form-submit-button').attr("data-kt-indicator", "off");
 

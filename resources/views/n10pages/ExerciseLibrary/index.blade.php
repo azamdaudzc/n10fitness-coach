@@ -20,7 +20,7 @@ Users
                 <div class="card-toolbar">
 
                     <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
-                        <a type="button" class="btn btn-primary" href="{{ route('exerciselibrary.create-edit') }}">
+                        <a type="button" class="btn btn-primary" href="{{ route('exercise.library.create-edit') }}">
                             <i class="fa-solid fa-plus fs-2"></i>Create New
                         </a>
                     </div>
@@ -32,8 +32,7 @@ Users
                 <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                     <th>User</th>
                     <th>Video Link</th>
-                    <th>Description</th>
-                    <th>Created At</th>
+                    <th>Creator</th>
                     <th>Status</th>
                     <th>Actions</th>
                 </tr>
@@ -68,7 +67,7 @@ data-kt-drawer-width="500px">
         $('body').on('click', '.view_record', function() {
             let id = $(this).attr('data-id');
             form_body.empty();
-            $.post('{{ route('exerciselibrary.details') }}', {
+            $.post('{{ route('exercise.library.details') }}', {
                 _token: '{{ csrf_token() }}',
                 id
             }, function(d) {
@@ -80,7 +79,7 @@ data-kt-drawer-width="500px">
             pageLength:10,
             lenghtChange:false,
             ajax: {
-                url: "{{ route('exerciselibrary.list') }}",
+                url: "{{ route('exercise.library.list') }}",
             },
             columns: [{
                 data: 'user'
@@ -88,11 +87,9 @@ data-kt-drawer-width="500px">
             {
                 data: 'video_link'
             },
+
             {
-                data: 'description'
-            },
-            {
-                data: 'createdAt'
+                data: 'creator'
             },
             {
                 data: 'status'
@@ -136,7 +133,7 @@ data-kt-drawer-width="500px">
                     }
                 }).then(function(data) {
                     if(data.isConfirmed==true){
-                        $.post('{{ route('exerciselibrary.delete') }}', {_token: '{{ csrf_token() }}', id}, function (d) {
+                        $.post('{{ route('exercise.library.delete') }}', {_token: '{{ csrf_token() }}', id}, function (d) {
                             if(d.success==true){
                                 toastr.success(d.msg);
                                 reloadTable();

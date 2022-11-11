@@ -51,13 +51,13 @@
                                         <input type="text" name="video_url" class="form-control mb-2 mb-md-0"
                                             placeholder="Video Url" value="{{$wv->video_url}}" />
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <label class="form-label">Thumbnail:</label>
                                         <input type="file" name="thumbnail" class="form-control mb-2 mb-md-0 imgInp"
                                             placeholder="Thumbnail" value="{{$wv->thumbnail}}" />
                                         <input type="hidden" value="{{$wv->thumbnail}}" name="old_thumbnail">
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <img @if($wv->thumbnail ==null)src="{{asset('assets/media/sample/image-area.jpg')}}" @else src="{{$wv->thumbnail}}" @endif  class=" mt-3 thumbnail-image " />
 
                                     </div>
@@ -80,12 +80,12 @@
                                         <input type="text" name="video_url" class="form-control mb-2 mb-md-0"
                                             placeholder="Video Url" />
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <label class="form-label">Thumbnail:</label>
                                         <input type="file" name="thumbnail" class="form-control mb-2 mb-md-0 imgInp"
                                             placeholder="Thumbnail" />
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-2">
                                         <img src="{{asset('assets/media/sample/image-area.jpg')}}"  class=" mt-3 thumbnail-image " />
 
                                     </div>

@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Carbon\Carbon;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class WarmupBuilderResource extends JsonResource
+class ProgramBuilderResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -21,7 +21,6 @@ class WarmupBuilderResource extends JsonResource
                 $name = $setting->name;
                 $description = $setting->description;
                 $instructions = $setting->instructions;
-                $creatorPicture = $setting->user->avatar != null ?  $setting->user->avatar : asset('/assets/media/avatars/blank.png');
 
                 $actions = '
                             <div class="dropdown">
@@ -44,19 +43,6 @@ class WarmupBuilderResource extends JsonResource
                             </div>
                 ';
 
-                $creator = '<div class="d-flex align-items-center">
-                <div class="symbol symbol-35px symbol-circle">
-                        <img alt="Pic" src="' . $creatorPicture . '"
-                             style=" object-fit: cover;"/>
-                </div>
-                <div class="text-gray-800 text-hover-primary mb-1 ms-5">
-                    ' . $setting->user->first_name.' '. $setting->user->last_name. '
-
-                </div>
-                <!--end::Details-->
-                </div>';
-
-
                 $status='<div class="badge badge-light-primary h-40px">Processing</div>';
                 if($setting->approved_by>0){
                     $status='<div class="badge badge-light-success h-40px">Approved</div>';
@@ -70,8 +56,7 @@ class WarmupBuilderResource extends JsonResource
                     'description' => $description,
                     'instructions' => $instructions,
                     'createdAt' => Carbon::createFromFormat('Y-m-d H:i:s', $setting->created_at)->format('d M, Y h:i A'),
-                    'actions' => $actions,
-                    'creator' => $creator
+                    'actions' => $actions
                 ];
             }
         }
