@@ -19,9 +19,9 @@ class ProgramBuilderResource extends JsonResource
         $settings = [];
         if ($this->resource->count() > 0) {
             foreach ($this->resource as $setting) {
-                $name = $setting->name;
-                $description = $setting->description;
-                $instructions = $setting->instructions;
+                $name = $setting->title;
+                $weeks = $setting->weeks;
+                $days = $setting->days;
 
                 $actions = '<div class="dropdown">
                               <button class="btn btn-active-dark btn-sm dropdown-toggle" type="button" id="actionsMenu" data-bs-toggle="dropdown" aria-expanded="false">
@@ -29,9 +29,9 @@ class ProgramBuilderResource extends JsonResource
                               </button>
                               <ul class="dropdown-menu" aria-labelledby="actionsMenu">';
 
-                if ($setting->created_by == Auth::user()->id){
+                if ($setting->created_by == Auth::user()->id) {
                     $actions .= ' <li >
-                            <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('warmup.builder.create-edit', $setting->id) . '" >Edit</a>
+                            <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.create-edit', $setting->id) . '" >Edit</a>
                             </li>
                             <li >
                             <a class="dropdown-item create_new_off_canvas_modal view_record" data-id="' . $setting->id . '" href="javascript:void(0);" >View</a>
@@ -42,17 +42,17 @@ class ProgramBuilderResource extends JsonResource
                 }
                 $actions .= ' </ul> </div>';
 
-                $status = '<div class="badge badge-light-primary h-40px">Processing</div>';
+                $status = '<div class="badge badge-light-warning">Processing</div>';
                 if ($setting->approved_by > 0) {
-                    $status = '<div class="badge badge-light-success h-40px">Approved</div>';
+                    $status = '<div class="badge badge-light-success">Approved</div>';
                 } else if ($setting->rejected_by > 0) {
-                    $status = '<div class="badge badge-light-danger h-40px">Rejected</div>';
+                    $status = '<div class="badge badge-light-danger">Rejected</div>';
                 }
                 $settings[] = [
                     'status' => $status,
                     'name' => $name,
-                    'description' => $description,
-                    'instructions' => $instructions,
+                    'weeks' => $weeks,
+                    'days' => $days,
                     'createdAt' => Carbon::createFromFormat('Y-m-d H:i:s', $setting->created_at)->format('d M, Y h:i A'),
                     'actions' => $actions
                 ];

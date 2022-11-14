@@ -30,8 +30,8 @@
                         <thead>
                             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                                 <th>Name</th>
-                                <th>Description</th>
-                                <th>Instruction</th>
+                                <th>Weeks</th>
+                                <th>Days</th>
                                 <th>Status</th>
                                 <th>Actions</th>
                             </tr>
@@ -55,7 +55,6 @@
 @endsection
 @section('scripts')
     <script type="text/javascript">
-
         $(function() {
 
             let form_body = $('#subdiv_kt_drawer_example_basic');
@@ -79,10 +78,10 @@
                         data: 'name'
                     },
                     {
-                        data: 'description'
+                        data: 'weeks'
                     },
                     {
-                        data: 'instructions'
+                        data: 'days'
                     },
                     {
                         data: 'status'
