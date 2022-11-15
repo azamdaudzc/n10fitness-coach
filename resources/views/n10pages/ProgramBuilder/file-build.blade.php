@@ -10,9 +10,7 @@
                   </button>
 
               </h2>
-              <input type="hidden" name="no_of_days" value="{{ $days }}">
-              <input type="hidden" name="no_of_weeks" value="{{ $weeks }}">
-              <input type="hidden" name="program_name" value="{{ $name }}">
+
               <!--begin::Accordion-->
               <div id="kt_accordion_week_{{ $i }}_body_1"
                   class="accordion-collapse @if ($i == 1) collapse show @else collapsing @endif"
@@ -24,11 +22,13 @@
                           <div class="col-6">
                               <div class="row">
                                   <div class="col-6">
+                                      <label for="week-{{ $i }}-proteins">Proteins</label>
                                       <input type="number" name="week-{{ $i }}-proteins"
                                           id="week-{{ $i }}-proteins" placeholder="Proteins"
                                           class="form-control">
                                   </div>
                                   <div class="col-6">
+                                      <label for="week-{{ $i }}-calories">Calories</label>
                                       <input type="number" name="week-{{ $i }}-calories"
                                           id="week-{{ $i }}-calories" placeholder="Calories"
                                           class="form-control">

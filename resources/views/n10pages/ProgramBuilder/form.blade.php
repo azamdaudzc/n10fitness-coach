@@ -7,27 +7,28 @@
 @section('content')
     <div id="kt_app_content" class="app-content flex-column-fluid">
         <div id="kt_app_content_container" class="app-container container-xxl">
-
-            <div class="form-group row mb-10">
-                <div class="col-3">
-                    <label for="program-name">Program Name</label>
-                    <input type="text" id="program-name" placeholder="Name" class="form-control">
-                </div>
-                <div class="col-3">
-                    <label for="program-weeks">Program Weeks</label>
-                    <input type="text" id="program-weeks" class="form-control" placeholder="Weeks">
-                </div>
-                <div class="col-3">
-                    <label for="program-days">Program Days</label>
-                    <input type="text" id="program-days" class="form-control" placeholder="Days" min="1"
-                        max="7">
-                </div>
-                <div class="col-3">
-                    <button class="btn btn-primary mt-6" onclick="loadForm()">Generate</button>
-                </div>
-            </div>
             <form action="{{ route('program.builder.store') }}" method="post">
                 @csrf
+                <div class="form-group row mb-10">
+                    <div class="col-3">
+                        <label for="program-name">Program Name</label>
+                        <input type="text" id="program-name" name="program_name" placeholder="Name" class="form-control">
+                    </div>
+                    <div class="col-3">
+                        <label for="program-weeks">Program Weeks</label>
+                        <input type="number" id="program-weeks" name="no_of_weeks" class="form-control"
+                            placeholder="Weeks">
+                    </div>
+                    <div class="col-3">
+                        <label for="program-days">Program Days</label>
+                        <input type="number" id="program-days" name="no_of_days" class="form-control" placeholder="Days"
+                            min="1" max="7">
+                    </div>
+                    <div class="col-3">
+                        <button class="btn btn-primary mt-6" onclick="loadForm()">Generate</button>
+                    </div>
+                </div>
+
                 <div class="generate-programform" id="program_builder_form">
                 </div>
             </form>
@@ -46,6 +47,16 @@
 
             $(document).on("submit", "form", function(event) {
                 event.preventDefault();
+                if ($('#program-name').val() == '') {
+                    toastr.error('Program Name Cannot Be Empty');
+                    return false;
+                } else if ($('#program-weeks').val() == '') {
+                    toastr.error('Program Week Cannot Be Empty');
+                    return false;
+                } else if ($('#program-days').val() == '') {
+                    toastr.error('Program Day Cannot Be Empty');
+                    return false;
+                }
                 $('#crud-form-submit-button').attr("data-kt-indicator", "on");
 
                 $.ajax({
@@ -95,6 +106,9 @@
             }, function(d) {
                 form_body.html(d);
                 load_repeater();
+                $('#program-name').attr('readonly', 'readonly');
+                $('#program-weeks').attr('readonly', 'readonly');
+                $('#program-days').attr('readonly', 'readonly');
             });
         }
 
