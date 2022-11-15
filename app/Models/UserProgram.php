@@ -8,4 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class UserProgram extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['program_builder_id', 'user_id'];
+
+    public function user()
+    {
+        return $this->hasOne('App\Models\User', 'id', 'user_id');
+    }
 }

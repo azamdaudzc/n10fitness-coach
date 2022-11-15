@@ -22,9 +22,8 @@ class CoachClientController extends Controller
 
     public function list()
     {
-        $users = ClientCoach::with('user.userAthleticType')->get();
+        $users = ClientCoach::with('user.userAthleticType')->where('coach_id', Auth::user()->id)->get();
+
         return new CoachClientResource($users);
     }
-
-
 }

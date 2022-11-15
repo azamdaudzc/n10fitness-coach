@@ -59,6 +59,10 @@ Route::middleware(['auth', 'check_user_type', 'verified'])->group(function () {
     Route::controller(ProgramBuilderController::class)->group(function () {
         Route::get('program/builder/lists', 'list')->name('program.builder.list');
         Route::get('program/builder/create-edit{id?}', 'create_edit')->name('program.builder.create-edit');
+        Route::get('program/builder/assign-clients{id?}', 'assign_clients')->name('program.builder.assign-clients');
+        Route::post('program/builder/attach-client', 'attach_client')->name('program.builder.attach-client');
+        Route::get('program/builder/assigedclients{id?}', 'assigedclients')->name('program.builder.assigedclients');
+        Route::post('program/builder/deleteclient', 'deleteclient')->name('program.builder.deleteclient');
         Route::get('program/builder/index', 'index')->name('program.builder.index');
         Route::post('program/builder/details', 'details')->name('program.builder.details');
         Route::post('program/builder/store', 'store')->name('program.builder.store');

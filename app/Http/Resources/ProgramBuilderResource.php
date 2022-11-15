@@ -34,6 +34,9 @@ class ProgramBuilderResource extends JsonResource
                             <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.create-edit', $setting->id) . '" >Edit</a>
                             </li>
                             <li >
+                            <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.assign-clients', $setting->id) . '" >Assign Clients</a>
+                            </li>
+                            <li >
                             <a class="dropdown-item create_new_off_canvas_modal view_record" data-id="' . $setting->id . '" href="javascript:void(0);" >View</a>
                             </li>
                             <li>

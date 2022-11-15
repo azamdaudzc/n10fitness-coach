@@ -18,8 +18,12 @@ class CoachClientResource extends JsonResource
         $settings = [];
         if ($this->resource->count() > 0) {
             foreach ($this->resource as $setting) {
-                $athletic_type = $setting->user->userAthleticType->name;
-                $age = $setting->user->age.' Years';
+                if ($setting->user->userAthleticType != null) {
+                    $athletic_type = $setting->user->userAthleticType->name;
+                } else {
+                    $athletic_type = 'N/A';
+                }
+                $age = $setting->user->age . ' Years';
                 $height = $setting->user->height;
                 $gender = $setting->user->gender;
                 $creatorPicture = $setting->user->avatar != null ?  $setting->user->avatar : asset('/assets/media/avatars/blank.png');
@@ -32,7 +36,7 @@ class CoachClientResource extends JsonResource
                         style=" object-fit: cover;"/>
                 </div>
                 <div class="text-gray-800 text-hover-primary mb-1 ms-5">
-                    ' . $setting->user->first_name.' '. $setting->user->last_name. '
+                    ' . $setting->user->first_name . ' ' . $setting->user->last_name . '
                     <div class="fw-semibold text-muted">' . $setting->user->email . '</div>
 
                 </div>

@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers\N10Controllers;
 
+use App\Models\User;
+use App\Models\ClientCoach;
+use App\Models\UserProgram;
 use Illuminate\Http\Request;
 use App\Models\WarmupBuilder;
 use App\Models\ProgramBuilder;
@@ -16,6 +19,7 @@ use App\Models\ProgramBuilderDayWarmup;
 use App\Models\ProgramBuilderDayExercise;
 use App\Models\ProgramBuilderDayExerciseSet;
 use App\Http\Resources\ProgramBuilderResource;
+use App\Http\Resources\ProgramClientResource;
 
 class ProgramBuilderController extends Controller
 {
@@ -45,6 +49,36 @@ class ProgramBuilderController extends Controller
         return view('N10Pages.ProgramBuilder.file-build', compact('name', 'weeks', 'days', 'data', 'title', 'warmups', 'exercises'));
     }
 
+    public function assign_clients($id = 0)
+    {
+        $data['program_id'] = $id;
+        $data['all_users']
+            = ClientCoach::with('user.userAthleticType')->where('coach_id', Auth::user()->id)->get();
+        return view('N10Pages.ProgramBuilder.assign-clients')->with($data);
+    }
+
+    public function attach_client(Request $request)
+    {
+        UserProgram::create([
+            'program_builder_id' => $request->program_id,
+            'user_id' => $request->client_id,
+        ]);
+        return response()->json(['success' => true, 'msg' => 'Client Attached']);
+    }
+
+    public function deleteclient(Request $request)
+    {
+        $user = UserProgram::find($request->id)->delete();
+        return response()->json(['success' => true, 'msg' => 'Client Deleted']);
+    }
+
+    public function assigedclients($id = 0)
+    {
+
+        $users = UserProgram::where('program_builder_id', $id)->with('user')->get();
+        return new ProgramClientResource($users);
+    }
+
     public function create_edit($id = 0)
     {
         $data['warmups'] = WarmupBuilder::where('approved_by', '>', 0)->get();
@@ -66,13 +100,14 @@ class ProgramBuilderController extends Controller
                     $data['week_day_warmup_data'][$week_data->week_no][$week_day_data->day_no] = ProgramBuilderDayWarmup::where('program_builder_week_day_id', $week_day_data->id)->get();
                     $data['week_day_exercise_data'][$week_data->week_no][$week_day_data->day_no]  = ProgramBuilderDayExercise::where('builder_week_day_id', $week_day_data->id)->get();
                     foreach ($data['week_day_exercise_data'][$week_data->week_no][$week_day_data->day_no] as  $week_day_exercise_data) {
-                        $data['week_day_exercise_set'][$week_day_exercise_data->id] = ProgramBuilderDayExerciseSet::where('program_week_days', $week_day_exercise_data->id)->get();
+                        $data['week_day_exercise_set'][$week_day_exercise_data->id] = ProgramBuilderDayExerciseSet::where('program_week_days', $week_day_exercise_data->id)->get()->first();
                     }
                 }
             }
+            return view('N10Pages.ProgramBuilder.edit-form')->with($data);
         }
         // dd($data['week_day_warmup_data']);
-        return view('N10Pages.ProgramBuilder.edit-form')->with($data);
+        return view('N10Pages.ProgramBuilder.form')->with($data);
     }
 
 
@@ -84,19 +119,34 @@ class ProgramBuilderController extends Controller
         DB::beginTransaction();
 
         try {
-            if (isset($request->program_id)) {
-            }
-
             $weeks = $request->no_of_weeks;
             $days = $request->no_of_days;
             $program_name = $request->program_name;
             $input = $request->all();
-            $program = ProgramBuilder::create([
-                'title' => $program_name,
-                'days' => $days,
-                'weeks' => $weeks,
-                'created_by' => Auth::user()->id,
-            ]);
+
+            if (isset($request->program_id)) {
+                $program = ProgramBuilder::find($request->program_id);
+                $program->update([
+                    'title' => $program_name,
+                    'days' => $days,
+                    'weeks' => $weeks,
+
+                ]);
+                try {
+                    ProgramBuilderWeek::where('program_builder_id', $request->program_id)->delete();
+                } catch (\Exception $e) {
+                    DB::rollback();
+                    return response()->json(['success' => false, 'msg' => 'Error Occured']);
+                }
+            } else {
+                $program = ProgramBuilder::create([
+                    'title' => $program_name,
+                    'days' => $days,
+                    'weeks' => $weeks,
+                    'created_by' => Auth::user()->id,
+                ]);
+            }
+
 
             for ($week = 1; $week <= $weeks; $week++) {
                 $new_week = ProgramBuilderWeek::create([
@@ -142,9 +192,9 @@ class ProgramBuilderController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['success' => false, 'msg' => 'Error Occured']);
+            return response()->json(['success' => false, 'msg' => $e]);
         }
-
+        DB::commit();
         return response()->json(['success' => true, 'msg' => 'Program Created']);
     }
 
@@ -164,6 +214,6 @@ class ProgramBuilderController extends Controller
             return response()->json(['success' => true, 'msg' => 'This is not created by you to delete']);
         }
         ProgramBuilder::find($request->id)->delete();
-        return response()->json(['success' => true, 'msg' => 'Question Deleted']);
+        return response()->json(['success' => true, 'msg' => 'Program Deleted']);
     }
 }
