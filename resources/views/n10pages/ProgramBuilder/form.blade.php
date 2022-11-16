@@ -25,12 +25,28 @@
                             min="1" max="7">
                     </div>
                     <div class="col-3">
-                        <button class="btn btn-primary mt-6" onclick="loadForm()">Generate</button>
+                        <button class="btn btn-primary mt-6" onclick="loadForm(event)">Generate</button>
                     </div>
                 </div>
 
                 <div class="generate-programform" id="program_builder_form">
                 </div>
+                <div class="col-3">
+                    <button class="btn btn-primary mt-6" onclick="addGroup(event)">Add Group</button>
+                </div>
+
+                <div class="box-footer mt-20">
+                    <button type="submit" class="btn btn-primary me-10" id="crud-form-submit-button">
+                        <span class="indicator-label">
+                            Submit
+                        </span>
+                        <span class="indicator-progress">
+                            Please wait... <span class="spinner-border spinner-border-sm align-middle ms-2"></span>
+                        </span>
+                    </button>
+                </div>
+                <input type="hidden" name="group_counter" id="group-counter" value="2">
+
             </form>
         </div>
     </div>
@@ -92,8 +108,18 @@
             });
         });
 
-        function loadForm() {
+        function loadRepeater(e) {
+            let form_body = $('#program_builder_form');
+            $.post('{{ route('program.builder.repeater') }}', {
+                _token: '{{ csrf_token() }}',
+            }, function(d) {
+                form_body.append(d);
 
+            });
+        }
+
+        function loadForm(e) {
+            e.preventDefault();
             let form_body = $('#program_builder_form');
             let name = $('#program-name').val();
             let weeks = $('#program-weeks').val();
@@ -105,10 +131,31 @@
                 days: days,
             }, function(d) {
                 form_body.html(d);
+                loadRepeater(e);
                 load_repeater();
                 $('#program-name').attr('readonly', 'readonly');
                 $('#program-weeks').attr('readonly', 'readonly');
                 $('#program-days').attr('readonly', 'readonly');
+            });
+        }
+
+        function addGroup(e) {
+            e.preventDefault();
+            let form_body = $('#program_builder_form');
+            let counter = $('#group-counter').val();
+            let name = $('#program-name').val();
+            let weeks = $('#program-weeks').val();
+            let days = $('#program-days').val();
+            $.post('{{ route('program.builder.details') }}', {
+                _token: '{{ csrf_token() }}',
+                counter: counter,
+                name: name,
+                weeks: weeks,
+                days: days,
+            }, function(d) {
+                form_body.append(d);
+                load_repeater();
+                $('#group-counter').val(parseInt(counter) + 1);
             });
         }
 

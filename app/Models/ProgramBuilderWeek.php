@@ -22,10 +22,10 @@ use Illuminate\Database\Eloquent\Model;
  */
 class ProgramBuilderWeek extends Model
 {
-    
+
     static $rules = [
-		'program_builder_id' => 'required',
-		'week_no' => 'required',
+        'program_builder_id' => 'required',
+        'week_no' => 'required',
     ];
 
     protected $perPage = 20;
@@ -35,7 +35,7 @@ class ProgramBuilderWeek extends Model
      *
      * @var array
      */
-    protected $fillable = ['program_builder_id','week_no','assigned_calories','assigned_proteins'];
+    protected $fillable = ['program_builder_id', 'week_no', 'assigned_calories', 'assigned_proteins', 'week_group'];
 
 
     /**
@@ -45,7 +45,7 @@ class ProgramBuilderWeek extends Model
     {
         return $this->hasMany('App\Models\ProgramBuilderWeekDay', 'program_builder_week_id', 'id');
     }
-    
+
     /**
      * @return \Illuminate\Database\Eloquent\Relations\HasOne
      */
@@ -53,6 +53,4 @@ class ProgramBuilderWeek extends Model
     {
         return $this->hasOne('App\Models\ProgramBuilder', 'id', 'program_builder_id');
     }
-    
-
 }

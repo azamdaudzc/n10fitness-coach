@@ -1230,10 +1230,11 @@
                 success: function(d, status) {
                     if (d.success == true) {
                         toastr.success(d.msg);
-
                         table.ajax.reload(null, false);
                         closeModal();
-
+                    } else {
+                        toastr.error(d.msg);
+                        closeModal();
                     }
                     $('#crud-form-submit-button').attr("data-kt-indicator", "off");
 

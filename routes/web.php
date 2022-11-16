@@ -65,6 +65,7 @@ Route::middleware(['auth', 'check_user_type', 'verified'])->group(function () {
         Route::post('program/builder/deleteclient', 'deleteclient')->name('program.builder.deleteclient');
         Route::get('program/builder/index', 'index')->name('program.builder.index');
         Route::post('program/builder/details', 'details')->name('program.builder.details');
+        Route::post('program/builder/repeater', 'get_repeater')->name('program.builder.repeater');
         Route::post('program/builder/store', 'store')->name('program.builder.store');
         Route::get('program/builder/view/{id?}', 'view')->name('program.builder.view');
         Route::post('program/builder/delete', 'delete')->name('program.builder.delete');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\N10Controllers;
 
+use Exception;
 use App\Models\User;
 use App\Models\ClientCoach;
 use App\Models\UserProgram;
@@ -18,8 +19,8 @@ use App\Models\ProgramBuilderWeekDay;
 use App\Models\ProgramBuilderDayWarmup;
 use App\Models\ProgramBuilderDayExercise;
 use App\Models\ProgramBuilderDayExerciseSet;
-use App\Http\Resources\ProgramBuilderResource;
 use App\Http\Resources\ProgramClientResource;
+use App\Http\Resources\ProgramBuilderResource;
 
 class ProgramBuilderController extends Controller
 {
@@ -46,7 +47,18 @@ class ProgramBuilderController extends Controller
         $name = $request->name;
         $days = $request->days;
         $weeks = $request->weeks;
-        return view('N10Pages.ProgramBuilder.file-build', compact('name', 'weeks', 'days', 'data', 'title', 'warmups', 'exercises'));
+        if (isset($request->counter)) {
+            $counter = $request->counter;
+        } else {
+            $counter = 1;
+        }
+        return view('N10Pages.ProgramBuilder.file-build', compact('counter', 'name', 'weeks', 'days', 'data', 'title', 'warmups', 'exercises'));
+    }
+
+    public function get_repeater(Request $request)
+    {
+        $exercises = ExerciseLibrary::where('approved_by', '>', 0)->get();
+        return view('N10Pages.ProgramBuilder.repeater', compact('exercises'));
     }
 
     public function assign_clients($id = 0)
@@ -59,6 +71,9 @@ class ProgramBuilderController extends Controller
 
     public function attach_client(Request $request)
     {
+        if (UserProgram::where('program_builder_id', $request->program_id)->where('user_id', $request->client_id)->exists()) {
+            return response()->json(['success' => false, 'msg' => 'Client Already Attached']);
+        }
         UserProgram::create([
             'program_builder_id' => $request->program_id,
             'user_id' => $request->client_id,
@@ -92,14 +107,20 @@ class ProgramBuilderController extends Controller
             $data['page_heading'] = "Edit Program";
             $data['sub_page_heading'] = collect(['User', 'ExerciseLibrary ']);
             $data['program'] = ProgramBuilder::find($id);
-            $data['week_data'] = ProgramBuilderWeek::where('program_builder_id', $data['program']->id)->get();
+            $data['week_data'] = ProgramBuilderWeek::where('program_builder_id', $data['program']->id)->distinct('week_group')->get();
+            $data['all_group_data'] = ProgramBuilderWeek::where('program_builder_id', $data['program']->id)->get();
+            $data['week_group_count'] = ProgramBuilderWeek::where('program_builder_id', $data['program']->id)->distinct('week_group')->count();
+            foreach ($data['week_data'] as $value) {
+                $data['week_group_range'][$value->week_group] = ProgramBuilderWeek::where('program_builder_id', $data['program']->id)->where('week_group', $value->week_group)->selectRaw(" MIN(week_no) AS StartFrom, MAX(week_no) AS EndTo")->get()->first();
+            }
+
             foreach ($data['week_data'] as  $week_data) {
-                $data['per_week_data'][$week_data->week_no] = $week_data;
-                $data['week_day_data'][$week_data->week_no] = ProgramBuilderWeekDay::where('program_builder_week_id', $week_data->id)->get();
-                foreach ($data['week_day_data'][$week_data->week_no] as  $week_day_data) {
-                    $data['week_day_warmup_data'][$week_data->week_no][$week_day_data->day_no] = ProgramBuilderDayWarmup::where('program_builder_week_day_id', $week_day_data->id)->get();
-                    $data['week_day_exercise_data'][$week_data->week_no][$week_day_data->day_no]  = ProgramBuilderDayExercise::where('builder_week_day_id', $week_day_data->id)->get();
-                    foreach ($data['week_day_exercise_data'][$week_data->week_no][$week_day_data->day_no] as  $week_day_exercise_data) {
+                $data['per_group_data'][$week_data->week_group] = $week_data;
+                $data['week_day_data'][$week_data->week_group] = ProgramBuilderWeekDay::where('program_builder_week_id', $week_data->id)->get();
+                foreach ($data['week_day_data'][$week_data->week_group] as  $week_day_data) {
+                    $data['week_day_warmup_data'][$week_data->week_group][$week_day_data->day_no] = ProgramBuilderDayWarmup::where('program_builder_week_day_id', $week_day_data->id)->get();
+                    $data['week_day_exercise_data'][$week_data->week_group][$week_day_data->day_no]  = ProgramBuilderDayExercise::where('builder_week_day_id', $week_day_data->id)->get();
+                    foreach ($data['week_day_exercise_data'][$week_data->week_group][$week_day_data->day_no] as  $week_day_exercise_data) {
                         $data['week_day_exercise_set'][$week_day_exercise_data->id] = ProgramBuilderDayExerciseSet::where('program_week_days', $week_day_exercise_data->id)->get()->first();
                     }
                 }
@@ -120,6 +141,7 @@ class ProgramBuilderController extends Controller
 
         try {
             $weeks = $request->no_of_weeks;
+            $group_counter = $request->group_counter;
             $days = $request->no_of_days;
             $program_name = $request->program_name;
             $input = $request->all();
@@ -138,6 +160,7 @@ class ProgramBuilderController extends Controller
                     DB::rollback();
                     return response()->json(['success' => false, 'msg' => 'Error Occured']);
                 }
+                $group_counter = $group_counter + 1;
             } else {
                 $program = ProgramBuilder::create([
                     'title' => $program_name,
@@ -147,46 +170,55 @@ class ProgramBuilderController extends Controller
                 ]);
             }
 
+            for ($counter = 1; $counter < $group_counter; $counter++) {
 
-            for ($week = 1; $week <= $weeks; $week++) {
-                $new_week = ProgramBuilderWeek::create([
-                    'program_builder_id' => $program->id,
-                    'week_no' => $week,
-                    'assigned_calories' => $input['week-' . $week . '-calories'],
-                    'assigned_proteins' => $input['week-' . $week . '-proteins'],
-                ]);
-                for ($day = 1; $day <= $days; $day++) {
-                    $new_day = ProgramBuilderWeekDay::create([
-                        'program_builder_week_id' => $new_week->id,
-                        'day_title' => 'Day ' . $day,
-                        'day_no' => $day
+                $from_week = $input['group-' . $counter . '-from'];
+                $to_week = $input['group-' . $counter . '-to'];
+
+
+                for ($week_no = $from_week; $week_no <= $to_week; $week_no++) {
+
+                    $new_week = ProgramBuilderWeek::create([
+                        'program_builder_id' => $program->id,
+                        'week_group' => $counter,
+                        'week_no' => $week_no,
+                        'assigned_calories' => $input['group-' . $counter . '-calories'],
+                        'assigned_proteins' => $input['group-' . $counter . '-proteins'],
                     ]);
 
-                    ProgramBuilderDayWarmup::create([
-                        'program_builder_week_day_id' => $new_day->id,
-                        'warmup_builder_id' => $input['week-' . $week . '-day-' . $day . '-warmup']
-                    ]);
-
-
-
-                    foreach ($input['kt_program_repeater_w_' . $week . '_d_' . $day] as  $value) {
-
-                        $new_day_exercise = ProgramBuilderDayExercise::create([
-                            'builder_week_day_id' => $new_day->id,
-                            'exercise_library_id' => $value['day_exercise'],
-                            'sets_no' => 0,
+                    for ($day = 1; $day <= $days; $day++) {
+                        $new_day = ProgramBuilderWeekDay::create([
+                            'program_builder_week_id' => $new_week->id,
+                            'day_title' => 'Day ' . $day,
+                            'day_no' => $day
                         ]);
 
-                        ProgramBuilderDayExerciseSet::create([
-                            'program_week_days' => $new_day_exercise->id,
-                            'set_no' => $value['exercise-sets-no'],
-                            'rep_min_no' => $value['exercise-rep-min'],
-                            'rep_max_no' => $value['exercise-rep-max'],
-                            'rpe_no' => $value['exercise-rpe'],
-                            'load_text' => $value['exercise-load'],
-                            'rest_time' => $value['exercise-rest-time'],
-                            'notes' => '',
+                        ProgramBuilderDayWarmup::create([
+                            'program_builder_week_day_id' => $new_day->id,
+                            'warmup_builder_id' => $input['group-' . $counter . '-day-' . $day . '-warmup']
                         ]);
+
+
+
+                        foreach ($input['kt_program_repeater_w_' . $counter . '_d_' . $day] as  $value) {
+
+                            $new_day_exercise = ProgramBuilderDayExercise::create([
+                                'builder_week_day_id' => $new_day->id,
+                                'exercise_library_id' => $value['day_exercise'],
+                                'sets_no' => 0,
+                            ]);
+
+                            ProgramBuilderDayExerciseSet::create([
+                                'program_week_days' => $new_day_exercise->id,
+                                'set_no' => $value['exercise-sets-no'],
+                                'rep_min_no' => $value['exercise-rep-min'],
+                                'rep_max_no' => $value['exercise-rep-max'],
+                                'rpe_no' => $value['exercise-rpe'],
+                                'load_text' => $value['exercise-load'],
+                                'rest_time' => $value['exercise-rest-time'],
+                                'notes' => '',
+                            ]);
+                        }
                     }
                 }
             }
