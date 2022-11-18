@@ -1,6 +1,41 @@
 @php
     $i = $counter;
 @endphp
+
+<!--begin::Accordion-->
+@if ($add_group == 1)
+    <div class="accordion" id="kt_accordion_1">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="week_cal_pro_main">
+                <button class="accordion-button fs-4 fw-semibold collapsed" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#week_cal_pro" aria-expanded="false" aria-controls="week_cal_pro">
+                    Week Calories Protiens
+                </button>
+            </h2>
+            <div id="week_cal_pro" class="accordion-collapse collapse" aria-labelledby="week_cal_pro"
+                data-bs-parent="#week_cal_pro_main">
+                <div class="accordion-body">
+                    <div class="row mt-2">
+                        <div class="col-4"></div>
+                        <div class="col-4"> <label for="">Calories</label></div>
+                        <div class="col-4"> <label for="">Proteins</label></div>
+                    </div>
+                    @for ($j = 1; $j <= $weeks; $j++)
+                        <div class="row mt-2">
+                            <div class="col-4 mt-3"><label for="week-cal-pro{{ $j }}">Week
+                                    {{ $j }}</label></div>
+                            <div class="col-4"> <input type="number" name="week-{{ $j }}-calories"
+                                    class="form-control" placeholder="Week Calories"></div>
+                            <div class="col-4"> <input type="number" name="week-{{ $j }}-proteins"
+                                    class="form-control" placeholder="Week Proteins"></div>
+                        </div>
+                    @endfor
+                </div>
+            </div>
+        </div>
+@endif
+
+<!--end::Accordion-->
 <div class="accordion mt-10" id="kt_accordion_group_{{ $i }}">
     <div class="accordion-item">
         <h2 class="accordion-header" id="kt_accordion_group_{{ $i }}_header_1">
@@ -19,7 +54,7 @@
             data-bs-parent="#kt_accordion_group_{{ $i }}">
             <div class="accordion-body">
                 <div class="row mb-10">
-                    <div class="col-6">
+                    <div class="col-12">
 
                         <div class="row">
                             <div class="col-6">
@@ -42,29 +77,8 @@
                                     @endfor
                                 </select>
                             </div>
-
-                        </div>
-
-                    </div>
-                    <div class="col-6">
-                        <div class="row">
-                            <div class="col-6">
-                                <label for="group-{{ $i }}-proteins">Proteins</label>
-                                <input type="number" name="group-{{ $i }}-proteins"
-                                    id="group-{{ $i }}-proteins" placeholder="Proteins"
-                                    class="form-control">
-                            </div>
-                            <div class="col-6">
-                                <label for="group-{{ $i }}-calories">Calories</label>
-                                <input type="number" name="group-{{ $i }}-calories"
-                                    id="group-{{ $i }}-calories" placeholder="Calories"
-                                    class="form-control">
-                            </div>
-
                         </div>
                     </div>
-
-
                 </div>
 
                 <div class="row">
@@ -91,17 +105,22 @@
                                         aria-labelledby="kt_accordion_w{{ $i }}_day_{{ $j }}_header_1"
                                         data-bs-parent="#kt_accordion_w{{ $i }}_day_{{ $j }}">
                                         <div class="accordion-body">
-                                            <select name="group-{{ $i }}-day-{{ $j }}-warmup"
-                                                id="group-{{ $i }}-day-{{ $j }}-warmup"
-                                                class="form-control mb-2 mb-md-0">
-                                                <option value="">Select Warmup</option>
+
+
+                                            <select class="form-select form-select-solid select-2-setup"
+                                                data-control="select2" data-close-on-select="false"
+                                                data-placeholder="Select Warmup" data-allow-clear="true"
+                                                multiple="multiple"
+                                                name="group-{{ $i }}-day-{{ $j }}-warmup[]"
+                                                id="group-{{ $i }}-day-{{ $j }}-warmup">
+                                                <option></option>
                                                 @foreach ($warmups as $w)
                                                     <option value="{{ $w->id }}">{{ $w->name }}
                                                     </option>
                                                 @endforeach
                                             </select>
                                             <!--begin::Repeater-->
-                                            <div class="program_builder_day_repeater">
+                                            <div class="program_builder_day_repeater_{{$i}}">
                                                 <div class="form-group">
                                                     <div
                                                         data-repeater-list="kt_program_repeater_w_{{ $i }}_d_{{ $j }}">
@@ -127,7 +146,7 @@
                                                                                 <input type="number"
                                                                                     name="exercise-sets-no"
                                                                                     id="group-{{ $i }}-day-{{ $j }}-exercise-1-sets-no"
-                                                                                    placeholder="Sets No"
+                                                                                    placeholder="Num Of Sets"
                                                                                     class="form-control">
                                                                             </div>
                                                                             <div class="col-6 mt-5">
@@ -170,6 +189,12 @@
                                                                                     class="form-control">
                                                                             </div>
                                                                         </div>
+                                                                        <div class="row">
+                                                                            <div class="col-12 mt-5">
+                                                                                <label for="">Note:</label>
+                                                                                <textarea name="exercise-notes" id="" cols="20" rows="2" class="form-control"></textarea>
+                                                                            </div>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-md-2">
@@ -197,9 +222,7 @@
                             <!--end::Accordion-->
                         </div>
                     @endfor
-
                 </div>
-
             </div>
             {{-- day card --}}
             <form method="POST" id="crud-form" action="{{ route('program.builder.store') }}" role="form"
@@ -209,11 +232,8 @@
                     <input type="hidden" name="id" value="{{ $data->id }}">
                 @endif
                 <div class="error-area"></div>
-
-
             </form>
         </div>
-
     </div>
 </div>
 </div>

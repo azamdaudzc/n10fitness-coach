@@ -49,17 +49,15 @@ class ProgramBuilderController extends Controller
         $weeks = $request->weeks;
         if (isset($request->counter)) {
             $counter = $request->counter;
+            $add_group = 0;
         } else {
             $counter = 1;
+            $add_group = 1;
         }
-        return view('N10Pages.ProgramBuilder.file-build', compact('counter', 'name', 'weeks', 'days', 'data', 'title', 'warmups', 'exercises'));
+        return view('N10Pages.ProgramBuilder.file-build', compact('add_group', 'counter', 'name', 'weeks', 'days', 'data', 'title', 'warmups', 'exercises'));
     }
 
-    public function get_repeater(Request $request)
-    {
-        $exercises = ExerciseLibrary::where('approved_by', '>', 0)->get();
-        return view('N10Pages.ProgramBuilder.repeater', compact('exercises'));
-    }
+
 
     public function assign_clients($id = 0)
     {
@@ -119,6 +117,10 @@ class ProgramBuilderController extends Controller
                 $data['week_day_data'][$week_data->week_group] = ProgramBuilderWeekDay::where('program_builder_week_id', $week_data->id)->get();
                 foreach ($data['week_day_data'][$week_data->week_group] as  $week_day_data) {
                     $data['week_day_warmup_data'][$week_data->week_group][$week_day_data->day_no] = ProgramBuilderDayWarmup::where('program_builder_week_day_id', $week_day_data->id)->get();
+                    $data['selected_warmup_ids'][$week_data->week_group][$week_day_data->day_no] = array();
+                    foreach ($data['week_day_warmup_data'][$week_data->week_group][$week_day_data->day_no] as $selected) {
+                        array_push($data['selected_warmup_ids'][$week_data->week_group][$week_day_data->day_no], $selected->warmup_builder_id);
+                    }
                     $data['week_day_exercise_data'][$week_data->week_group][$week_day_data->day_no]  = ProgramBuilderDayExercise::where('builder_week_day_id', $week_day_data->id)->get();
                     foreach ($data['week_day_exercise_data'][$week_data->week_group][$week_day_data->day_no] as  $week_day_exercise_data) {
                         $data['week_day_exercise_set'][$week_day_exercise_data->id] = ProgramBuilderDayExerciseSet::where('program_week_days', $week_day_exercise_data->id)->get()->first();
@@ -131,6 +133,42 @@ class ProgramBuilderController extends Controller
         return view('N10Pages.ProgramBuilder.form')->with($data);
     }
 
+    public function view($id = 0)
+    {
+        $data['warmups'] = WarmupBuilder::where('approved_by', '>', 0)->get();
+        $data['exercises'] = ExerciseLibrary::where('approved_by', '>', 0)->get();
+
+        if ($id > 0) {
+            $data['title'] = "Edit Program";
+            $data['page_heading'] = "Edit Program";
+            $data['sub_page_heading'] = collect(['User', 'ExerciseLibrary ']);
+            $data['program'] = ProgramBuilder::find($id);
+            $data['week_data'] = ProgramBuilderWeek::where('program_builder_id', $data['program']->id)->distinct('week_group')->get();
+            $data['all_group_data'] = ProgramBuilderWeek::where('program_builder_id', $data['program']->id)->get();
+            $data['week_group_count'] = ProgramBuilderWeek::where('program_builder_id', $data['program']->id)->distinct('week_group')->count();
+            foreach ($data['week_data'] as $value) {
+                $data['week_group_range'][$value->week_group] = ProgramBuilderWeek::where('program_builder_id', $data['program']->id)->where('week_group', $value->week_group)->selectRaw(" MIN(week_no) AS StartFrom, MAX(week_no) AS EndTo")->get()->first();
+            }
+
+            foreach ($data['week_data'] as  $week_data) {
+                $data['per_group_data'][$week_data->week_group] = $week_data;
+                $data['week_day_data'][$week_data->week_group] = ProgramBuilderWeekDay::where('program_builder_week_id', $week_data->id)->get();
+                foreach ($data['week_day_data'][$week_data->week_group] as  $week_day_data) {
+                    $data['week_day_warmup_data'][$week_data->week_group][$week_day_data->day_no] = ProgramBuilderDayWarmup::where('program_builder_week_day_id', $week_day_data->id)->get();
+                    $data['selected_warmup_ids'][$week_data->week_group][$week_day_data->day_no] = array();
+                    foreach ($data['week_day_warmup_data'][$week_data->week_group][$week_day_data->day_no] as $selected) {
+                        array_push($data['selected_warmup_ids'][$week_data->week_group][$week_day_data->day_no], $selected->warmup_builder_id);
+                    }
+                    $data['week_day_exercise_data'][$week_data->week_group][$week_day_data->day_no]  = ProgramBuilderDayExercise::where('builder_week_day_id', $week_day_data->id)->get();
+                    foreach ($data['week_day_exercise_data'][$week_data->week_group][$week_day_data->day_no] as  $week_day_exercise_data) {
+                        $data['week_day_exercise_set'][$week_day_exercise_data->id] = ProgramBuilderDayExerciseSet::where('program_week_days', $week_day_exercise_data->id)->get()->first();
+                    }
+                }
+            }
+            return view('N10Pages.ProgramBuilder.view')->with($data);
+        }
+
+    }
 
 
 
@@ -145,6 +183,35 @@ class ProgramBuilderController extends Controller
             $days = $request->no_of_days;
             $program_name = $request->program_name;
             $input = $request->all();
+
+            // ------------ week validation area -----------
+            $past_from_week=0;
+            $past_to_week=0;
+            $error=false;
+
+            if($input['group-' . 1 . '-from']!=1){
+                $error=true;
+            }
+            if($input['group-' . $group_counter-1 . '-to']!=$weeks){
+                $error=true;
+            }
+
+            for ($jo = 1; $jo < $group_counter; $jo++) {
+                $from_week = $input['group-' . $jo . '-from'];
+                $to_week = $input['group-' . $jo . '-to'];
+                if($past_from_week!=0 && $past_to_week!=0 ){
+                    if($past_to_week+1 != $from_week){
+                        $error=true;
+                        break;
+                    }
+                }
+                $past_from_week=$from_week;
+                $past_to_week=$to_week;
+            }
+            if($error){
+                return response()->json(['success' => false, 'msg' => 'Week Arrangement Not Correct']);
+            }
+            // ------------ week validation area -----------
 
             if (isset($request->program_id)) {
                 $program = ProgramBuilder::find($request->program_id);
@@ -182,8 +249,8 @@ class ProgramBuilderController extends Controller
                         'program_builder_id' => $program->id,
                         'week_group' => $counter,
                         'week_no' => $week_no,
-                        'assigned_calories' => $input['group-' . $counter . '-calories'],
-                        'assigned_proteins' => $input['group-' . $counter . '-proteins'],
+                        'assigned_calories' => $input['week-' . $week_no . '-calories'],
+                        'assigned_proteins' => $input['week-' . $week_no . '-proteins'],
                     ]);
 
                     for ($day = 1; $day <= $days; $day++) {
@@ -192,11 +259,12 @@ class ProgramBuilderController extends Controller
                             'day_title' => 'Day ' . $day,
                             'day_no' => $day
                         ]);
-
-                        ProgramBuilderDayWarmup::create([
-                            'program_builder_week_day_id' => $new_day->id,
-                            'warmup_builder_id' => $input['group-' . $counter . '-day-' . $day . '-warmup']
-                        ]);
+                        foreach ($input['group-' . $counter . '-day-' . $day . '-warmup'] as $warmup) {
+                            ProgramBuilderDayWarmup::create([
+                                'program_builder_week_day_id' => $new_day->id,
+                                'warmup_builder_id' => $warmup
+                            ]);
+                        }
 
 
 
@@ -216,7 +284,7 @@ class ProgramBuilderController extends Controller
                                 'rpe_no' => $value['exercise-rpe'],
                                 'load_text' => $value['exercise-load'],
                                 'rest_time' => $value['exercise-rest-time'],
-                                'notes' => '',
+                                'notes' => $value['exercise-notes'],
                             ]);
                         }
                     }
@@ -247,5 +315,21 @@ class ProgramBuilderController extends Controller
         }
         ProgramBuilder::find($request->id)->delete();
         return response()->json(['success' => true, 'msg' => 'Program Deleted']);
+    }
+
+    public function semiUpdate(Request $request){
+        if($request->update_type=='name'){
+            ProgramBuilder::find($request->program_id)->update(['title' => $request->name]);
+            return response()->json(['success' => true, 'msg' => 'Program Updated']);
+
+        }
+    }
+
+    public function getSemiUpdateData(Request $request){
+        if($request->type=='calories_proteins'){
+            $data['week_start']=$request->week_start;
+            $data['week_end']=$request->week_end;
+            return view('N10Pages.ProgramBuilder.semi-edit-calories-protiens')->with($data);
+        }
     }
 }

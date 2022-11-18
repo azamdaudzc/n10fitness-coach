@@ -32,12 +32,14 @@ class ProgramBuilderResource extends JsonResource
                 if ($setting->created_by == Auth::user()->id) {
                     $actions .= ' <li >
                             <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.create-edit', $setting->id) . '" >Edit</a>
-                            </li>
-                            <li >
-                            <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.assign-clients', $setting->id) . '" >Assign Clients</a>
-                            </li>
-                            <li >
-                            <a class="dropdown-item create_new_off_canvas_modal view_record" data-id="' . $setting->id . '" href="javascript:void(0);" >View</a>
+                            </li>';
+                            if($setting->approved_by>0){
+                                $actions.='    <li >
+                                <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.assign-clients', $setting->id) . '" >Assign Clients</a>
+                                </li>';
+                            }
+                            $actions.='<li >
+                            <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.view', $setting->id) . '" >View</a>
                             </li>
                             <li>
                             <a class="dropdown-item delete_record" data-id="' . $setting->id . '" href="javascript:void(0);">Delete</a>

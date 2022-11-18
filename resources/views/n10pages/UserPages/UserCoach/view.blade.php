@@ -42,7 +42,7 @@
                                 <!--begin::Card body-->
                                 <div class="card-body pt-0 pb-5" id="profile_form">
                                     <!--begin::Table wrapper-->
-                                    <div class="table-responsive">
+                                    <div class="table-responsive table-wth-minh">
 
                                     </div>
                                     <!--end::Table wrapper-->

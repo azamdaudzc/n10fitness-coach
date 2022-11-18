@@ -32,7 +32,8 @@
                 <div class="generate-programform" id="program_builder_form">
                 </div>
                 <div class="col-3">
-                    <button class="btn btn-primary mt-6" onclick="addGroup(event)">Add Group</button>
+                    <button class="btn btn-primary mt-6" onclick="addGroup(event)" style="display: none"
+                        id="add-group-button">Add Group</button>
                 </div>
 
                 <div class="box-footer mt-20">
@@ -88,6 +89,9 @@
                             window.location.href = "{{ route('program.builder.index') }}";
 
                         }
+                        else{
+                            toastr.error(d.msg);
+                        }
                         $('#crud-form-submit-button').attr("data-kt-indicator", "off");
 
                     },
@@ -108,15 +112,7 @@
             });
         });
 
-        function loadRepeater(e) {
-            let form_body = $('#program_builder_form');
-            $.post('{{ route('program.builder.repeater') }}', {
-                _token: '{{ csrf_token() }}',
-            }, function(d) {
-                form_body.append(d);
 
-            });
-        }
 
         function loadForm(e) {
             e.preventDefault();
@@ -124,15 +120,23 @@
             let name = $('#program-name').val();
             let weeks = $('#program-weeks').val();
             let days = $('#program-days').val();
+            if (days > 7) {
+
+                toastr.error("Days Cannot Be Greater Then 7");
+                return false;
+            }
             $.post('{{ route('program.builder.details') }}', {
                 _token: '{{ csrf_token() }}',
                 name: name,
                 weeks: weeks,
                 days: days,
             }, function(d) {
+                //loadRepeater(e);
                 form_body.html(d);
-                loadRepeater(e);
-                load_repeater();
+                load_repeater(".program_builder_day_repeater_1");
+                $('.select-2-setup').select2();
+
+                $('#add-group-button').show();
                 $('#program-name').attr('readonly', 'readonly');
                 $('#program-weeks').attr('readonly', 'readonly');
                 $('#program-days').attr('readonly', 'readonly');
@@ -154,13 +158,15 @@
                 days: days,
             }, function(d) {
                 form_body.append(d);
-                load_repeater();
+                load_repeater(".program_builder_day_repeater_"+counter);
+                $('.select-2-setup').select2();
+
                 $('#group-counter').val(parseInt(counter) + 1);
             });
         }
 
-        function load_repeater() {
-            $('.program_builder_day_repeater').repeater({
+        function load_repeater(className) {
+            $(className).repeater({
                 initEmpty: false,
 
                 defaultValues: {

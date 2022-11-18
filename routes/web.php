@@ -65,12 +65,14 @@ Route::middleware(['auth', 'check_user_type', 'verified'])->group(function () {
         Route::post('program/builder/deleteclient', 'deleteclient')->name('program.builder.deleteclient');
         Route::get('program/builder/index', 'index')->name('program.builder.index');
         Route::post('program/builder/details', 'details')->name('program.builder.details');
-        Route::post('program/builder/repeater', 'get_repeater')->name('program.builder.repeater');
         Route::post('program/builder/store', 'store')->name('program.builder.store');
         Route::get('program/builder/view/{id?}', 'view')->name('program.builder.view');
         Route::post('program/builder/delete', 'delete')->name('program.builder.delete');
         Route::post('program/builder/details', 'details')->name('program.builder.details');
         Route::post('program/builder/share-program', 'shareProgram')->name('program.builder.share.program');
+        Route::post('exercise/library/semiupdate', 'semiUpdate')->name('exercise.library.semiupdate');
+        Route::post('exercise/library/getsemiupdatedata', 'getSemiUpdateData')->name('exercise.library.getsemiupdatedata');
+
     });
 
     Route::controller(ExerciseLibraryController::class)->group(function () {
@@ -84,6 +86,7 @@ Route::middleware(['auth', 'check_user_type', 'verified'])->group(function () {
         Route::post('exercise/library/approve', 'approve')->name('exercise.library.approve');
         Route::post('exercise/library/reject', 'reject')->name('exercise.library.reject');
         Route::get('exercise/library/view/{id?}', 'view')->name('exercise.library.view');
+
     });
 
     Route::controller(UserCoachController::class)->group(function () {

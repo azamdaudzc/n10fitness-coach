@@ -25,8 +25,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body py-4">
-                    <table class="table align-middle table-row-dashed fs-6 gy-5" id="users_table">
+                <div class="card-body py-4 ">
+                    <table class="table align-middle table-row-dashed fs-6 gy-5 table-wth-minh " id="users_table">
                         <thead>
                             <tr class="text-start text-muted fw-bold fs-7 text-uppercase gs-0">
                                 <th>Name</th>
