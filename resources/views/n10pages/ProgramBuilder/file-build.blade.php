@@ -105,9 +105,21 @@
                                         aria-labelledby="kt_accordion_w{{ $i }}_day_{{ $j }}_header_1"
                                         data-bs-parent="#kt_accordion_w{{ $i }}_day_{{ $j }}">
                                         <div class="accordion-body">
+                                            <select name="group-{{ $i }}-day-{{ $j }}-dayname"
+                                            id="group-{{ $i }}-day-{{ $j }}-dayname"
+                                            class="form-control mb-2 mb-md-0">
+                                            <option value="">Select Day
+                                            </option>
+                                            <option value="monday">Monday</option>
+                                            <option value="tuesday">Tuesday</option>
+                                            <option value="wednesday">Wednesday</option>
+                                            <option value="thursday">Thursday</option>
+                                            <option value="friday">Friday</option>
+                                            <option value="saturday">Saturday</option>
+                                            <option value="sunday">Sunday</option>
+                                        </select>
 
-
-                                            <select class="form-select form-select-solid select-2-setup"
+                                            <select class="form-select form-select-solid select-2-setup mt-2"
                                                 data-control="select2" data-close-on-select="false"
                                                 data-placeholder="Select Warmup" data-allow-clear="true"
                                                 multiple="multiple"

@@ -157,18 +157,19 @@
                                                                 aria-labelledby="kt_accordion_w{{ $i }}_day_{{ $j }}_header_1"
                                                                 data-bs-parent="#kt_accordion_w{{ $i }}_day_{{ $j }}">
                                                                 <div class="accordion-body">
-                                                                    {{-- <select
-                                                                        name="group-{{ $i }}-day-{{ $j }}-warmup"
-                                                                        id="group-{{ $i }}-day-{{ $j }}-warmup"
+                                                                    <select name="group-{{ $i }}-day-{{ $j }}-dayname"
+                                                                        id="group-{{ $i }}-day-{{ $j }}-dayname"
                                                                         class="form-control mb-2 mb-md-0">
-                                                                        <option value="">Select Warmup</option>
-                                                                        @foreach ($warmups as $w)
-                                                                            <option value="{{ $w->id }}"
-                                                                                @if ($selected_warmup_ids[$i][$j]->first()->warmup_builder_id == $w->id) selected @endif>
-                                                                                {{ $w->name }}
-                                                                            </option>
-                                                                        @endforeach
-                                                                    </select> --}}
+                                                                        <option value="">Select Day
+                                                                        </option>
+                                                                        <option value="monday" @if($day_title[$i][$j]=='monday') selected @endif>Monday</option>
+                                                                        <option value="tuesday" @if($day_title[$i][$j]=='tuesday') selected @endif>Tuesday</option>
+                                                                        <option value="wednesday" @if($day_title[$i][$j]=='wednesday') selected @endif>Wednesday</option>
+                                                                        <option value="thursday" @if($day_title[$i][$j]=='thursday') selected @endif>Thursday</option>
+                                                                        <option value="friday" @if($day_title[$i][$j]=='friday') selected @endif>Friday</option>
+                                                                        <option value="saturday" @if($day_title[$i][$j]=='saturday') selected @endif>Saturday</option>
+                                                                        <option value="sunday" @if($day_title[$i][$j]=='sunday') selected @endif>Sunday</option>
+                                                                    </select>
 
                                                                     <select
                                                                         class="form-select form-select-solid select-2-setup"
@@ -371,6 +372,7 @@
 
             $(document).on("submit", "form", function(event) {
                 event.preventDefault();
+
                 if ($('#program-name').val() == '') {
                     toastr.error('Program Name Cannot Be Empty');
                     return false;
@@ -395,6 +397,9 @@
                             toastr.success(d.msg);
                             window.location.href = "{{ route('program.builder.index') }}";
 
+                        }
+                        else{
+                            toastr.error(d.msg.errorInfo);
                         }
                         $('#crud-form-submit-button').attr("data-kt-indicator", "off");
 

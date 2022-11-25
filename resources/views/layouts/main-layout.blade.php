@@ -176,6 +176,9 @@
         hr.solid {
             border-top: 3px solid #bbb;
         }
+        .editable-program-table tr td input{
+            width: 50px
+        }
     </style>
 
 </head>
