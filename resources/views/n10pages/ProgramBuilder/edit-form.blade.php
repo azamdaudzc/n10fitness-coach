@@ -399,7 +399,7 @@
 
                         }
                         else{
-                            toastr.error(d.msg.errorInfo);
+                            toastr.error(d.msg);
                         }
                         $('#crud-form-submit-button').attr("data-kt-indicator", "off");
 

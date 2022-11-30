@@ -197,10 +197,16 @@ class ProgramBuilderController extends Controller
             if($input['group-' . 1 . '-from']!=1){
                 $error=true;
             }
-            if($input['group-' . $group_counter . '-to']!=$weeks){
-                $error=true;
-
+            if (isset($request->program_id)) {
+                if($input['group-' . $group_counter . '-to']!=$weeks){
+                    $error=true;
+                }
             }
+            else{
+            if($input['group-' . $group_counter-1 . '-to']!=$weeks){
+                $error=true;
+            }
+        }
 
             for ($jo = 1; $jo < $group_counter; $jo++) {
                 $from_week = $input['group-' . $jo . '-from'];
@@ -298,7 +304,11 @@ class ProgramBuilderController extends Controller
             }
         } catch (\Exception $e) {
             DB::rollback();
-            return response()->json(['success' => false, 'msg' => $e]);
+            if (strpos($e->getMessage(), 'Numeric value out of range') !== false) {
+                return response()->json(['success' => false, 'msg' => 'Numeric value out of range']);
+
+            }
+            return response()->json(['success' => false, 'msg' => $e->getMessage()]);
         }
         DB::commit();
         return response()->json(['success' => true, 'msg' => 'Program Created']);
