@@ -141,7 +141,7 @@
             font-weight: bold;
         }
 
-        .program-table{
+        .program-table {
             width: 100%
         }
 
@@ -156,12 +156,14 @@
 
         }
 
-        .program-table thead{
+        .program-table thead {
             background-color: #767676;
             color: white;
         }
 
-        .program-table tbody tr:nth-child(even){background-color: #f2f2f2;}
+        .program-table tbody tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
 
         .program-main-area {
             overflow-x: auto;
@@ -176,8 +178,28 @@
         hr.solid {
             border-top: 3px solid #bbb;
         }
-        .editable-program-table tr td input{
+
+        .editable-program-table tr td input {
             width: 50px
+        }
+
+        .notification {
+            color: white;
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            border-radius: 2px;
+        }
+
+
+        .notification .badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            padding: 2px 5px;
+            border-radius: 50%;
+            background-color: red;
+            color: white;
         }
     </style>
 
@@ -318,6 +340,12 @@
                 .end();
             $('input[name=_token]').val("{{ csrf_token() }}");
         })
+
+        $(".notification-main-icon").click(function(){
+
+            $.get('{{route('mark.notification.done')}}', function (){
+            });
+        });
     </script>
 
 </body>

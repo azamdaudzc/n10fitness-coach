@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\N10Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
 use App\Models\ExerciseMuscle;
 use App\Models\ExerciseLibrary;
@@ -152,6 +153,14 @@ class ExerciseLibraryController extends Controller
             }
 
             $type='requested';
+
+            $name="ExerciseLibrary Created";
+            $message="Coach ".Auth::user()->first_name.' '.Auth::user()->last_name." Created ExerciseLibrary";
+            $url="";
+            $type="ExerciseLibraryCreated";
+            $admin=User::where('user_type','admin')->get()->first()->id;
+            $this->sendNotification($admin,$name,$message,$url,$type);
+
 
             return response()->json(['success' => true, 'msg' => 'ExerciseLibrary Created','type' => $type]);
         }

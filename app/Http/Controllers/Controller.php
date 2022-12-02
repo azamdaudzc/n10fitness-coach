@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
-use Illuminate\Foundation\Bus\DispatchesJobs;
-use Illuminate\Foundation\Validation\ValidatesRequests;
-use Illuminate\Routing\Controller as BaseController;
+use App\Models\Notification;
 use Illuminate\Http\Request;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Routing\Controller as BaseController;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class Controller extends BaseController
 {
@@ -49,5 +50,13 @@ class Controller extends BaseController
         return $path;
     }
 
+    function sendNotification($user_id,$name,$message,$url = null,$type = null){
+        Notification::create([
+            'user_id' => $user_id,
+            'name' => $name,
+            'message' => $message,
+            'url' => $url,
+        ]);
 
+    }
 }

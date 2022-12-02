@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\N10Controllers;
 
+use App\Models\User;
 use App\Models\WarmupVideo;
 use Illuminate\Http\Request;
 use App\Models\WarmupBuilder;
@@ -117,6 +118,13 @@ class WarmupBuilderController extends Controller
                     ]);
                 }
             }
+            $name="Warmup Created";
+            $message="Coach ".Auth::user()->first_name.' '.Auth::user()->last_name." Created Warmup";
+            $url="";
+            $type="WarmupCreated";
+            $admin=User::where('user_type','admin')->get()->first()->id;
+            $this->sendNotification($admin,$name,$message,$url,$type);
+
 
             return response()->json(['success' => true, 'msg' => 'Warmup Created']);
         }

@@ -1,12 +1,17 @@
 <?php
 
+use App\Models\Notification;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Artisan;
-use App\Http\Controllers\N10Controllers\WarmupBuilderController;
-use App\Http\Controllers\N10Controllers\CoachClientController;
-use App\Http\Controllers\N10Controllers\ProgramBuilderController;
 use App\Http\Controllers\UserControllers\UserCoachController;
+use App\Http\Controllers\N10Controllers\CoachClientController;
+use App\Http\Controllers\N10Controllers\ProgramShareController;
+use App\Http\Controllers\N10Controllers\ProgramSharedController;
+use App\Http\Controllers\N10Controllers\WarmupBuilderController;
+use App\Http\Controllers\N10Controllers\ProgramBuilderController;
 use App\Http\Controllers\N10Controllers\ExerciseLibraryController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -69,9 +74,22 @@ Route::middleware(['auth', 'check_user_type', 'verified'])->group(function () {
         Route::get('program/builder/view/{id?}', 'view')->name('program.builder.view');
         Route::post('program/builder/delete', 'delete')->name('program.builder.delete');
         Route::post('program/builder/details', 'details')->name('program.builder.details');
-        Route::post('program/builder/share-program', 'shareProgram')->name('program.builder.share.program');
         Route::post('exercise/library/semiupdate', 'semiUpdate')->name('exercise.library.semiupdate');
         Route::post('exercise/library/getsemiupdatedata', 'getSemiUpdateData')->name('exercise.library.getsemiupdatedata');
+
+    });
+
+    Route::controller(ProgramShareController::class)->group(function () {
+        Route::get('program/share', 'shareProgram')->name('program.share.index');
+        Route::post('program/share/save', 'share_program_with_coach')->name('program.share.save');
+        Route::post('program/share/delete', 'un_share_program_with_coach')->name('program.share.delete');
+        Route::get('program/share/coaches', 'sharedProgramCoaches')->name('program.share.coaches');
+    });
+
+    Route::controller(ProgramSharedController::class)->group(function () {
+        Route::get('programs/sharedwith', 'sharedPrograms')->name('program.sharedwith.index');
+        Route::get('programs/sharedwith/list', 'sharedProgramsList')->name('program.sharedwith.list');
+        Route::get('programs/sharedwith/save/{id?}', 'sharedProgramsSave')->name('program.sharedwith.saveasyours');
 
     });
 
@@ -95,6 +113,11 @@ Route::middleware(['auth', 'check_user_type', 'verified'])->group(function () {
         Route::post('user/coach/info', 'info')->name('user.coach.info');
         Route::post('user/coach/store', 'store')->name('user.coach.store');
     });
+
+
+    Route::get('mark/notification/done',function (){
+        Notification::where('user_id',Auth::user()->id)->update(['read' => 1]);
+    })->name('mark.notification.done');
 });
 
 

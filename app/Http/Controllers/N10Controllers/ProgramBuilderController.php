@@ -20,6 +20,7 @@ use App\Models\ProgramBuilderDayWarmup;
 use App\Models\ProgramBuilderDayExercise;
 use App\Models\ProgramBuilderDayExerciseSet;
 use App\Http\Resources\ProgramClientResource;
+use App\Http\Resources\ProgramSharedResource;
 use App\Http\Resources\ProgramBuilderResource;
 
 class ProgramBuilderController extends Controller
@@ -76,12 +77,25 @@ class ProgramBuilderController extends Controller
             'program_builder_id' => $request->program_id,
             'user_id' => $request->client_id,
         ]);
+
+        $name="Program Assigned";
+        $message="Program ".ProgramBuilder::find($request->program_id)->title." Was Assigned";
+        $url="";
+        $type="ProgramAssigned";
+        $this->sendNotification($request->client_id,$name,$message,$url,$type);
+
         return response()->json(['success' => true, 'msg' => 'Client Attached']);
     }
 
     public function deleteclient(Request $request)
     {
-        $user = UserProgram::find($request->id)->delete();
+        $user = UserProgram::find($request->id);
+        $name="Program Removed";
+        $message="Program ".ProgramBuilder::find($user->program_builder_id)->title." Was Removed";
+        $url="";
+        $type="ProgramRemoved";
+        $this->sendNotification($user->user_id,$name,$message,$url,$type);
+        $user->delete();
         return response()->json(['success' => true, 'msg' => 'Client Deleted']);
     }
 
@@ -302,6 +316,14 @@ class ProgramBuilderController extends Controller
                     }
                 }
             }
+
+            $name="Program Created";
+            $message="Coach ".Auth::user()->first_name.' '.Auth::user()->last_name." Created Program";
+            $url="";
+            $type="ProgramCreated";
+            $admin=User::where('user_type','admin')->get()->first()->id;
+            $this->sendNotification($admin,$name,$message,$url,$type);
+
         } catch (\Exception $e) {
             DB::rollback();
             if (strpos($e->getMessage(), 'Numeric value out of range') !== false) {
@@ -314,14 +336,7 @@ class ProgramBuilderController extends Controller
         return response()->json(['success' => true, 'msg' => 'Program Created']);
     }
 
-    public function shareProgram(Request $request)
-    {
-        ProgramBuilderShare::create([
-            'program_builder_id' => $request->program_builder_id,
-            'user_id' => $request->user_id,
-        ]);
-        return response()->json(['success' => true, 'msg' => 'Program Shared']);
-    }
+
 
     public function delete(Request $request)
     {
@@ -441,4 +456,7 @@ class ProgramBuilderController extends Controller
         return view('N10Pages.ProgramBuilder.semi-edit-programs')->with($data);
 
     }
+
+
+
 }
