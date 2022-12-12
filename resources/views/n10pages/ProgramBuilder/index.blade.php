@@ -19,9 +19,11 @@
                     <div class="card-toolbar">
 
                         <div class="d-flex justify-content-end" data-kt-user-table-toolbar="base">
+                            @if(canDeployPrograms())
                             <a type="button" class="btn btn-primary" href="{{ route('program.builder.create-edit') }}">
                                 <i class="fa-solid fa-plus fs-2"></i>Create New
                             </a>
+                            @endif
                         </div>
                     </div>
                 </div>

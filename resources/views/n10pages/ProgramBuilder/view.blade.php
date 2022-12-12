@@ -12,9 +12,11 @@
                 <div class="card-header collapsible cursor-pointer rotate" data-bs-toggle="collapse" data-bs-target="#kt_docs_card_collapsible">
                     <h3 class="card-title">Program</h3>
                     <div class="card-toolbar">
+                        @if($program->created_by == Auth::user()->id)
                         <button type="button"  onclick="openSemiUpdateModal('program_name')">
                             <i class="fa fa-edit"></i>
                         </button>
+                        @endif
                     </div>
                 </div>
                     <div class="card-body">
@@ -53,9 +55,11 @@
                                 <div class="card-header collapsible cursor-pointer rotate" data-bs-toggle="collapse" data-bs-target="#kt_docs_card_collapsible">
                                     <h3 class="card-title fs-7">Calories-Proteins</h3>
                                     <div class="card-toolbar">
+                                        @if($program->created_by == Auth::user()->id)
                                         <button type="button"  class="" onclick="openSemiUpdateModal('calories_proteins','{{$week_group_range[$i]->StartFrom}}','{{$week_group_range[$i]->EndTo}}')">
                                             <i class="fa fa-edit"></i>
                                         </button>
+                                        @endif
                                     </div>
                                 </div>
                                      <div class="card-body">
@@ -89,9 +93,11 @@
                                     <div class="card-header collapsible cursor-pointer rotate" data-bs-toggle="collapse" data-bs-target="#kt_docs_card_collapsible">
                                         <h3 class="card-title">Day {{ $j }} [ {{$day_title[$i][$j]}} ] </h3>
                                         <div class="card-toolbar">
+                                            @if($program->created_by == Auth::user()->id)
                                             <button type="button"  class="" onclick="openSemiUpdateModal('program_day_edit','{{$week_group_range[$i]->StartFrom}}','{{$week_group_range[$i]->EndTo}}','{{$j}}','{{$per_group_data[$i]->week_group}}')">
                                                 <i class="fa fa-edit"></i>
                                             </button>
+                                            @endif
                                         </div>
                                     </div>
                                         <div class="card-body">
@@ -258,7 +264,9 @@
                 });
             });
         });
-
+    </script>
+    @if($program->created_by == Auth::user()->id)
+<script>
         function openSemiUpdateModal(name,start,end,day,group){
             let id="{{$program->id}}";
             $.post( "{{route('exercise.library.getsemiupdatedata')}}", {
@@ -280,4 +288,6 @@
 
 
     </script>
+
+    @endif
 @endsection

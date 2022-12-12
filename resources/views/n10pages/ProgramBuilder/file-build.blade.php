@@ -163,13 +163,25 @@
                                                                             </div>
                                                                             <div class="col-6 mt-5">
                                                                                 <input type="number"
+                                                                                    name="exercise-rpe"
+                                                                                    id="group-{{ $i }}-day-{{ $j }}-exercise-1-rpe"
+                                                                                    placeholder="RPE"
+                                                                                    min="5"
+                                                                                    max="10"
+                                                                                    step="0.1"
+                                                                                    class="form-control">
+                                                                            </div>
+
+                                                                        </div>
+                                                                        <div class="row">
+
+                                                                            <div class="col-6 mt-5">
+                                                                                <input type="number"
                                                                                     name="exercise-rep-min"
                                                                                     id="group-{{ $i }}-day-{{ $j }}-exercise-1-rep-min"
                                                                                     placeholder="Rep Min"
                                                                                     class="form-control">
                                                                             </div>
-                                                                        </div>
-                                                                        <div class="row">
                                                                             <div class="col-6 mt-5">
                                                                                 <input type="number"
                                                                                     name="exercise-rep-max"
@@ -177,24 +189,17 @@
                                                                                     placeholder="Rep Max"
                                                                                     class="form-control">
                                                                             </div>
-                                                                            <div class="col-6 mt-5">
-                                                                                <input type="number"
-                                                                                    name="exercise-rpe"
-                                                                                    id="group-{{ $i }}-day-{{ $j }}-exercise-1-rpe"
-                                                                                    placeholder="RPE"
-                                                                                    class="form-control">
-                                                                            </div>
                                                                         </div>
                                                                         <div class="row">
                                                                             <div class="col-6 mt-5">
-                                                                                <input type="number"
+                                                                                <input type="text"
                                                                                     name="exercise-load"
                                                                                     id="group-{{ $i }}-day-{{ $j }}-exercise-1-load"
                                                                                     placeholder="Load"
                                                                                     class="form-control">
                                                                             </div>
                                                                             <div class="col-6 mt-5">
-                                                                                <input type="number"
+                                                                                <input type="text"
                                                                                     name="exercise-rest-time"
                                                                                     id="group-{{ $i }}-day-{{ $j }}-exercise-1-rest-time"
                                                                                     placeholder="Rest Time"

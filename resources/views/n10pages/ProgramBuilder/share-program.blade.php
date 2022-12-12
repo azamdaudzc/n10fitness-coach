@@ -8,7 +8,7 @@
             <div class="d-flex flex-column flex-lg-row">
                 <!--begin::Sidebar-->
                 <!--begin::Card-->
-                <div class="card pt-4 mb-6 mb-xl-9 col-6">
+                <div class="card pt-4 mb-6 mb-xl-9 col-12">
                     <!--begin::Card header-->
                     <div class="card-header border-0">
                         <!--begin::Card title-->
@@ -47,92 +47,8 @@
                     <!--end::Card body-->
                 </div>
                 <!--end::Card-->
-                {{-- <div class="card  col-3 m-012">
-                    <div class="card-body">
-                        <label for="">Programs</label>
-                        <ul style="list-style: none">
-                            @foreach ($all_programs as $ap)
-                                <li id="program_list_{{$ap->id}}" onclick="loadCoaches('{{$ap->id}}')">
-                                    <div class="card">
-                                        {{$ap->title}}
-                                    </div>
-                                </li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div> --}}
-                <div class="col-xxl-6 mb-5 mb-xl-0 col-6 " style="padding-left:10px">
-                    <!--begin::List widget 8-->
-                    <div class="card card-flush h-lg-100">
-                        <!--begin::Header-->
-                        <div class="card-header pt-7 mb-5">
-                            <!--begin::Title-->
-                            <h3 class="card-title align-items-start flex-column">
-                                <span class="card-label fw-bold text-gray-800">Approved Programs</span>
-                                <span class="text-gray-400 mt-1 fw-semibold fs-6">Click on a program to start sharing</span>
-                            </h3>
-                            <!--end::Title-->
-                            <!--begin::Toolbar-->
-                            <div class="card-toolbar">
-                                <a href="../../demo24/dist/apps/ecommerce/sales/listing.html" class="btn btn-sm btn-light">View All</a>
-                            </div>
-                            <!--end::Toolbar-->
-                        </div>
-                        <!--end::Header-->
-                        <!--begin::Body-->
-                        <div class="card-body pt-0" >
-                            @foreach ($all_programs as $ap)
-
-                            <!--begin::Item-->
-                            <div class="d-flex flex-stack" onclick="loadCoaches('{{$ap->id}}')" >
-                                <!--begin::Flag-->
-                                <img src="assets/media/flags/united-states" class="me-4 w-25px" style="border-radius: 4px" alt="">
-                                <!--end::Flag-->
-                                <!--begin::Section-->
-                                <div class="d-flex flex-stack flex-row-fluid d-grid gap-2">
-                                    <!--begin::Content-->
-                                    <div class="me-5">
-                                        <!--begin::Title-->
-                                        <a href="#" id="program_list_{{$ap->id}}" class="fw-bold text-hover-primary fs-6"> {{$ap->title}}</a>
-                                        <!--end::Title-->
-                                        <!--begin::Desc-->
-                                        <!--end::Desc-->
-                                    </div>
-                                    <!--end::Content-->
-                                    <!--begin::Info-->
-                                    <div class="d-flex align-items-center">
-                                        <!--begin::Number-->
-                                        <span class="text-gray-800 fw-bold fs-6 me-3 d-block">Weeks {{$ap->weeks}}</span>
-                                        <!--end::Number-->
-                                        <!--begin::Label-->
-                                        <div class="mt-auto">
-                                            <!--begin::Label-->
-                                            <span class="badge badge-light-success fs-base">
-                                            <!--begin::Svg Icon | path: icons/duotune/arrows/arr066.svg-->
-                                            <span class="svg-icon svg-icon-5 svg-icon-success ms-n1">
-
-                                            </span>
-                                            <!--end::Svg Icon-->Days {{$ap->days}}</span>
-                                            <!--end::Label-->
-                                        </div>
-                                        <!--end::Label-->
-                                    </div>
-                                    <!--end::Info-->
-                                </div>
-                                <!--end::Section-->
-                            </div>
-                            <!--end::Item-->
-                            <!--begin::Separator-->
-                            <div class="separator separator-dashed my-3"></div>
-                            <!--end::Separator-->
-                            @endforeach
 
 
-                        </div>
-                        <!--end::Body-->
-                    </div>
-                    <!--end::LIst widget 8-->
-                </div>
             </div>
             <!--end::Layout-->
             <!--begin::Modals-->
@@ -172,12 +88,12 @@
                             <form id="kt_modal_add_client_form" method="POST" class="form"
                                 action="{{ route('program.share.save') }}">
                                 @csrf
-                                <input type="hidden" name="program_id" id="attachment_program_id" >
+                                <input type="hidden" name="program_id" id="attachment_program_id"  value="{{$program_id}}">
                                 <!--begin::Input group-->
                                 <div class="fv-row mb-7">
                                     <!--begin::Label-->
 
-                                    <label class="required fs-6 fw-semibold form-label mb-2">Client Name</label>
+                                    <label class="required fs-6 fw-semibold form-label mb-2">Coach Name</label>
                                     <!--end::Label-->
                                     <!--begin::Input-->
                                     <select class="form-select select-2-setup" data-control="select2"
@@ -223,21 +139,17 @@
 
 @section('page_scripts')
     <script>
+        let table = null;
         $(function() {
 
             $('.select-2-setup').select2();
-        });
-        let table = $('#users_table').DataTable();
-        function loadCoaches(id){
-            table.clear();
-    table.destroy();
-            $('#attachment_program_id').val(id);
-            $('#program_list_'+id).css('color','red');
+
+
          table = $('#users_table').DataTable({
             pageLength: 50,
             lenghtChange: false,
             ajax: {
-                url: "{{ route('program.share.coaches') }}?id="+id,
+                url: "{{ route('program.share.coaches',$program_id )}}",
             },
             columns: [{
                     data: 'user'
@@ -246,9 +158,9 @@
                     data: 'actions'
                 },
             ],
-        });
-    }
+    });
 
+});
 
         $('body').on('click', '.delete_record', function() {
             let id = $(this).attr('data-id');

@@ -228,17 +228,31 @@
                                                                                                                 value="{{ $week_day_exercise_set[$exercise->id]->set_no }}">
                                                                                                         </div>
                                                                                                         <div
-                                                                                                            class="col-6 mt-5">
-                                                                                                            <input
-                                                                                                                type="number"
-                                                                                                                name="exercise-rep-min"
-                                                                                                                id="group-{{ $i }}-day-{{ $j }}-exercise-1-rep-min"
-                                                                                                                placeholder="Rep Min"
-                                                                                                                class="form-control"
-                                                                                                                value="{{ $week_day_exercise_set[$exercise->id]->rep_min_no }}">
+                                                                                                        class="col-6 mt-5">
+                                                                                                        <input
+                                                                                                            type="number"
+                                                                                                            name="exercise-rpe"
+                                                                                                            id="group-{{ $i }}-day-{{ $j }}-exercise-1-rpe"
+                                                                                                            min="5"
+                                                                                                            max="10"
+                                                                                                            step="0.1"
+                                                                                                            placeholder="RPE"
+                                                                                                            class="form-control"
+                                                                                                            value="{{ $week_day_exercise_set[$exercise->id]->rpe_no }}">
                                                                                                         </div>
+
                                                                                                     </div>
                                                                                                     <div class="row">
+                                                                                                        <div
+                                                                                                        class="col-6 mt-5">
+                                                                                                        <input
+                                                                                                            type="number"
+                                                                                                            name="exercise-rep-min"
+                                                                                                            id="group-{{ $i }}-day-{{ $j }}-exercise-1-rep-min"
+                                                                                                            placeholder="Rep Min"
+                                                                                                            class="form-control"
+                                                                                                            value="{{ $week_day_exercise_set[$exercise->id]->rep_min_no }}">
+                                                                                                        </div>
                                                                                                         <div
                                                                                                             class="col-6 mt-5">
                                                                                                             <input
@@ -249,22 +263,13 @@
                                                                                                                 class="form-control"
                                                                                                                 value="{{ $week_day_exercise_set[$exercise->id]->rep_max_no }}">
                                                                                                         </div>
-                                                                                                        <div
-                                                                                                            class="col-6 mt-5">
-                                                                                                            <input
-                                                                                                                type="number"
-                                                                                                                name="exercise-rpe"
-                                                                                                                id="group-{{ $i }}-day-{{ $j }}-exercise-1-rpe"
-                                                                                                                placeholder="RPE"
-                                                                                                                class="form-control"
-                                                                                                                value="{{ $week_day_exercise_set[$exercise->id]->rpe_no }}">
-                                                                                                        </div>
+
                                                                                                     </div>
                                                                                                     <div class="row">
                                                                                                         <div
                                                                                                             class="col-6 mt-5">
                                                                                                             <input
-                                                                                                                type="number"
+                                                                                                                type="text"
                                                                                                                 name="exercise-load"
                                                                                                                 id="group-{{ $i }}-day-{{ $j }}-exercise-1-load"
                                                                                                                 placeholder="Load"
@@ -274,7 +279,7 @@
                                                                                                         <div
                                                                                                             class="col-6 mt-5">
                                                                                                             <input
-                                                                                                                type="number"
+                                                                                                                type="text"
                                                                                                                 name="exercise-rest-time"
                                                                                                                 id="group-{{ $i }}-day-{{ $j }}-exercise-1-rest-time"
                                                                                                                 placeholder="Rest Time"

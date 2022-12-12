@@ -22,6 +22,7 @@ use App\Models\ProgramBuilderDayExerciseSet;
 use App\Http\Resources\ProgramClientResource;
 use App\Http\Resources\ProgramSharedResource;
 use App\Http\Resources\ProgramBuilderResource;
+use App\Models\UserPermission;
 
 class ProgramBuilderController extends Controller
 {
@@ -35,7 +36,9 @@ class ProgramBuilderController extends Controller
 
     public function list()
     {
-        $users = ProgramBuilder::where('created_by', Auth::user()->id)->orWhere('approved_by', '>', 0)->get();
+        $one = ProgramBuilder::where('created_by', Auth::user()->id)->get();
+        $two=ProgramBuilderShare::where('user_id',Auth::user()->id)->join('program_builders','program_builder_shares.program_builder_id','=','program_builders.id')->select('program_builders.*')->get();
+        $users = $one->merge($two);
         return new ProgramBuilderResource($users);
     }
 
@@ -70,12 +73,14 @@ class ProgramBuilderController extends Controller
 
     public function attach_client(Request $request)
     {
-        if (UserProgram::where('program_builder_id', $request->program_id)->where('user_id', $request->client_id)->exists()) {
+
+        if (UserProgram::where('program_builder_id', $request->program_id)->where('assigned_by',Auth::user()->id)->where('user_id', $request->client_id)->exists()) {
             return response()->json(['success' => false, 'msg' => 'Client Already Attached']);
         }
         UserProgram::create([
             'program_builder_id' => $request->program_id,
             'user_id' => $request->client_id,
+            'assigned_by' => Auth::user()->id,
         ]);
 
         $name="Program Assigned";
@@ -102,12 +107,16 @@ class ProgramBuilderController extends Controller
     public function assigedclients($id = 0)
     {
 
-        $users = UserProgram::where('program_builder_id', $id)->with('user')->get();
+        $users = UserProgram::where('program_builder_id', $id)->where('assigned_by',Auth::user()->id)->with('user')->get();
         return new ProgramClientResource($users);
     }
 
     public function create_edit($id = 0)
     {
+        if(!$this->canDeployPrograms()){
+            return response()->json(['success' => false, 'msg' => 'You Are Not Permitted To Work On Programs']);
+
+        }
         $data['warmups'] = WarmupBuilder::where('approved_by', '>', 0)->get();
         $data['exercises'] = ExerciseLibrary::where('approved_by', '>', 0)->get();
         $data['page_heading'] = "Add Program";
@@ -150,6 +159,10 @@ class ProgramBuilderController extends Controller
 
     public function view($id = 0)
     {
+        if(!$this->canDeployPrograms()){
+            return response()->json(['success' => false, 'msg' => 'You Are Not Permitted To Work On Programs']);
+
+        }
         $data['warmups'] = WarmupBuilder::where('approved_by', '>', 0)->get();
         $data['exercises'] = ExerciseLibrary::where('approved_by', '>', 0)->get();
 
@@ -193,7 +206,10 @@ class ProgramBuilderController extends Controller
 
     public function store(Request $request)
     {
+        if(!$this->canDeployPrograms()){
+            return response()->json(['success' => false, 'msg' => 'You Are Not Permitted To Work On Programs']);
 
+        }
         DB::beginTransaction();
 
         try {
@@ -340,6 +356,10 @@ class ProgramBuilderController extends Controller
 
     public function delete(Request $request)
     {
+        if(!$this->canDeployPrograms()){
+            return response()->json(['success' => false, 'msg' => 'You Are Not Permitted To Work On Programs']);
+
+        }
         $program = ProgramBuilder::find($request->id);
         if ($program->created_by != Auth::user()->id) {
             return response()->json(['success' => true, 'msg' => 'This is not created by you to delete']);
@@ -349,6 +369,10 @@ class ProgramBuilderController extends Controller
     }
 
     public function semiUpdate(Request $request){
+        if(!$this->canDeployPrograms()){
+            return response()->json(['success' => false, 'msg' => 'You Are Not Permitted To Work On Programs']);
+
+        }
         $input=$request->all();
         if($request->update_type=='program_name'){
             ProgramBuilder::find($request->program_id)->update(['title' => $request->new_program_name]);

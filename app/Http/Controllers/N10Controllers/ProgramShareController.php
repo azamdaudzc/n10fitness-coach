@@ -53,9 +53,9 @@ class ProgramShareController extends Controller
         return response()->json(['success' => true, 'msg' => 'Client Share Deleted']);
     }
 
-    public function sharedProgramCoaches(Request $request)
+    public function sharedProgramCoaches($id=0)
     {
-        $id=$request->id;
+
         $users = ProgramBuilder::with('programBuilderShares.user')->where('created_by',Auth::user()->id)->where('id', $id)->get()->first();
 
         return new ProgramShareResource($users->programBuilderShares);

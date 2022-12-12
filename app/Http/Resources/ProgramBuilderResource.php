@@ -23,6 +23,19 @@ class ProgramBuilderResource extends JsonResource
                 $weeks = $setting->weeks;
                 $days = $setting->days;
 
+                if($setting->created_by != Auth::user()->id){
+                    $name = '<div class="d-flex align-items-center">
+                            <div class="symbol symbol-35px symbol-circle">
+
+                            </div>
+                            <div class="text-gray-800 text-hover-primary mb-1 ms-5">
+                                ' . $name . '<br>
+                                <div class="badge badge-light-warning">Shared Program</div>
+                            </div>
+                            <!--end::Details-->
+                        </div>';
+                }
+
                 $actions = '<div class="dropdown">
                               <button class="btn btn-active-dark btn-sm dropdown-toggle" type="button" id="actionsMenu" data-bs-toggle="dropdown" aria-expanded="false">
                                 Action
@@ -33,17 +46,24 @@ class ProgramBuilderResource extends JsonResource
                     $actions .= ' <li >
                             <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.create-edit', $setting->id) . '" >Edit</a>
                             </li>';
-                            if($setting->approved_by>0){
-                                $actions.='    <li >
-                                <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.assign-clients', $setting->id) . '" >Assign Clients</a>
-                                </li>';
-                            }
-                            $actions.='<li >
-                            <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.view', $setting->id) . '" >View</a>
-                            </li>
+
+                            $actions.='
                             <li>
                             <a class="dropdown-item delete_record" data-id="' . $setting->id . '" href="javascript:void(0);">Delete</a>
                             </li>';
+                }
+
+                $actions.='<li >
+                            <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.view', $setting->id) . '" >View</a>
+                            </li>';
+
+                if($setting->approved_by>0){
+                    $actions.='    <li >
+                    <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.builder.assign-clients', $setting->id) . '" >Assign Clients</a>
+                    </li>';
+                    $actions.='    <li >
+                    <a class="dropdown-item " data-id="' . $setting->id . '" href="' . route('program.share.index', $setting->id) . '" >Share</a>
+                    </li>';
                 }
                 $actions .= ' </ul> </div>';
 

@@ -125,11 +125,11 @@
                                     </td>
                                     <td><input type="number" name="{{ $wr }}_rep_max_no_{{$count}}" value="{{$set_details[$count][$wr]->rep_max_no}}">
                                     </td>
-                                    <td><input type="number" name="{{ $wr }}_rpe_no_{{$count}}" value="{{$set_details[$count][$wr]->rpe_no}}">
+                                    <td><input type="number" min="5" max="10" step="0.1" name="{{ $wr }}_rpe_no_{{$count}}" value="{{$set_details[$count][$wr]->rpe_no}}">
                                     </td>
-                                    <td><input type="number" name="{{ $wr }}_load_text_{{$count}}" value="{{$set_details[$count][$wr]->load_text}}">
+                                    <td><input type="text" name="{{ $wr }}_load_text_{{$count}}" value="{{$set_details[$count][$wr]->load_text}}">
                                     </td>
-                                    <td><input type="number" name="{{ $wr }}_rest_time_{{$count}}" value="{{$set_details[$count][$wr]->rest_time}}">
+                                    <td><input type="text" name="{{ $wr }}_rest_time_{{$count}}" value="{{$set_details[$count][$wr]->rest_time}}">
                                     </td>
 
                                 </tr>

@@ -250,43 +250,27 @@
                      </div>
                      <!--end::Col-->
 
-                      <!--begin::Col-->
-                      <div class="col mb-4">
-                        <!--begin::Link-->
-                        <a href="{{ route('program.share.index') }}"
-                            class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-90px h-90px border-gray-200 menu-link"
-                            data-kt-button="true">
-                            <!--begin::Icon-->
-                            <span class="mb-2">
-                                <i class="fa-solid fa-computer fs-2"></i>
-                            </span>
-                            <!--end::Icon-->
-                            <!--begin::Label-->
-                            <span class="fs-7 fw-bold">Share Program</span>
-                            <!--end::Label-->
-                        </a>
-                        <!--end::Link-->
-                    </div>
-                    <!--end::Col-->
 
-                     <!--begin::Col-->
+                      <!--begin::Col-->
                      <div class="col mb-4">
-                        <!--begin::Link-->
-                        <a href="{{ route('program.sharedwith.index') }}"
-                            class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-90px h-90px border-gray-200 menu-link"
-                            data-kt-button="true">
-                            <!--begin::Icon-->
-                            <span class="mb-2">
-                                <i class="fa-solid fa-computer fs-2"></i>
-                            </span>
-                            <!--end::Icon-->
-                            <!--begin::Label-->
-                            <span class="fs-7 fw-bold">Shared Programs</span>
-                            <!--end::Label-->
-                        </a>
-                        <!--end::Link-->
-                    </div>
-                    <!--end::Col-->
+                         <!--begin::Link-->
+                         <a href="{{ route('client.reports.index') }}"
+                             class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-90px h-90px border-gray-200 menu-link"
+                             data-kt-button="true">
+                             <!--begin::Icon-->
+                             <span class="mb-2">
+                                 <i class="fa-solid fa-computer fs-2"></i>
+                             </span>
+                             <!--end::Icon-->
+                             <!--begin::Label-->
+                             <span class="fs-7 fw-bold">Client Report</span>
+                             <!--end::Label-->
+                         </a>
+                         <!--end::Link-->
+                     </div>
+                     <!--end::Col-->
+
+
 
 
                  </div>

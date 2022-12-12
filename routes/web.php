@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\UserControllers\UserCoachController;
 use App\Http\Controllers\N10Controllers\CoachClientController;
 use App\Http\Controllers\N10Controllers\ProgramShareController;
+use App\Http\Controllers\N10Controllers\ClientReportsController;
 use App\Http\Controllers\N10Controllers\ProgramSharedController;
 use App\Http\Controllers\N10Controllers\WarmupBuilderController;
 use App\Http\Controllers\N10Controllers\ProgramBuilderController;
@@ -80,10 +81,10 @@ Route::middleware(['auth', 'check_user_type', 'verified'])->group(function () {
     });
 
     Route::controller(ProgramShareController::class)->group(function () {
-        Route::get('program/share', 'shareProgram')->name('program.share.index');
-        Route::post('program/share/save', 'share_program_with_coach')->name('program.share.save');
-        Route::post('program/share/delete', 'un_share_program_with_coach')->name('program.share.delete');
-        Route::get('program/share/coaches', 'sharedProgramCoaches')->name('program.share.coaches');
+        Route::get('program/builder/share/{id?}', 'shareProgram')->name('program.share.index');
+        Route::post('program/builder/share/save', 'share_program_with_coach')->name('program.share.save');
+        Route::post('program/builder/share/delete', 'un_share_program_with_coach')->name('program.share.delete');
+        Route::get('program/builder/share/coaches/list/{id?}', 'sharedProgramCoaches')->name('program.share.coaches');
     });
 
     Route::controller(ProgramSharedController::class)->group(function () {
@@ -112,6 +113,12 @@ Route::middleware(['auth', 'check_user_type', 'verified'])->group(function () {
         Route::post('user/coach/details', 'details')->name('user.coach.details');
         Route::post('user/coach/info', 'info')->name('user.coach.info');
         Route::post('user/coach/store', 'store')->name('user.coach.store');
+    });
+
+
+    Route::controller(ClientReportsController::class)->group(function () {
+        Route::get('client/reports', 'index')->name('client.reports.index');
+        Route::get('client/reports/exercise-summary-report/{id?}', 'exercise_summary_report')->name('client.reports.exercise-summary-report');
     });
 
 

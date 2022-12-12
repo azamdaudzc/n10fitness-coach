@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Notification;
 use Illuminate\Http\Request;
+use App\Models\UserPermission;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -57,6 +59,11 @@ class Controller extends BaseController
             'message' => $message,
             'url' => $url,
         ]);
+
+    }
+
+    function canDeployPrograms(){
+        return UserPermission::where('user_id',Auth::user()->id)->where('name','Program Deployment')->exists();
 
     }
 }
