@@ -12,6 +12,7 @@ use App\Http\Controllers\N10Controllers\ProgramSharedController;
 use App\Http\Controllers\N10Controllers\WarmupBuilderController;
 use App\Http\Controllers\N10Controllers\ProgramBuilderController;
 use App\Http\Controllers\N10Controllers\ExerciseLibraryController;
+use App\Http\Controllers\N10Controllers\ClientAnalyticsReportsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -119,6 +120,12 @@ Route::middleware(['auth', 'check_user_type', 'verified'])->group(function () {
     Route::controller(ClientReportsController::class)->group(function () {
         Route::get('client/reports', 'index')->name('client.reports.index');
         Route::get('client/reports/exercise-summary-report/{id?}', 'exercise_summary_report')->name('client.reports.exercise-summary-report');
+    });
+
+
+    Route::controller(ClientAnalyticsReportsController::class)->group(function () {
+        Route::get('client/analytics', 'index')->name('client.analytics.index');
+        Route::get('client/analytics/analytics-summary-report/{id?}', 'analytics_summary_report')->name('client.reports.analytics-summary-report');
     });
 
 

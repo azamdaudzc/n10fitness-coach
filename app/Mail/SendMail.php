@@ -1,36 +1,33 @@
 <?php
-
-namespace App\Mail;
-
+namespace App\Jobs;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-
-class SendMail extends Mailable
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use App\Mail\EmailForQueuing;
+use Mail;
+class SendEmail implements ShouldQueue
 {
-    use Queueable, SerializesModels;
-
-    public $testMailData;
-
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+    protected $details;
     /**
-     * Create a new message instance.
+     * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($testMailData)
+    public function __construct($details)
     {
-        $this->testMailData = $testMailData;
+        $this->details = $details;
     }
-
     /**
-     * Build the message.
+     * Execute the job.
      *
-     * @return $this
+     * @return void
      */
-    public function build()
+    public function handle()
     {
-        return $this->subject('Email From AllPHPTricks.com')
-                    ->view('emails.testMail');
+        $email = new EmailForQueuing($this->details);
+        Mail::to($this->details['email'])->send($email);
     }
 }

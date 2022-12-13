@@ -40,9 +40,7 @@
             <div class="tab-content" id="myTabContent">
                 <div class="tab-pane fade show active" id="kt_tab_pane_1" role="tabpanel">
                     <div class="card p-5" style="overflow-x: scroll">
-                        @php
-                            $last_ex = '';
-                        @endphp
+
                         @for ($i = 1; $i <= $program->days; $i++)
 
                             <label for="" class="mt-5 mb-5"><strong style="color:blue;">Day
@@ -54,7 +52,7 @@
                                         @if ($j == 1)
                                             <div class="col-5">
                                             @else
-                                                <div class="col-2">
+                                                <div class="col-3">
                                         @endif
                                         <table class="table">
 
@@ -69,15 +67,11 @@
                                                     @if ($j == 1)
                                                         <td><strong>Movement</strong></td>
                                                     @endif
-                                                    @if ($item->exerciseLibrary->name != $last_ex)
-                                                        <td colspan="">{{ $item->exerciseLibrary->name }}</td>
-                                                    @else
-                                                        <td colspan="">.</td>
-                                                    @endif
+
+                                                        <td colspan="">{{$out = strlen($item->exerciseLibrary->name) > 18 ? substr($item->exerciseLibrary->name,0,18)."..." : $item->exerciseLibrary->name}}</td>
+
                                                 </tr>
-                                                @php
-                                                    $last_ex = $item->exerciseLibrary->name;
-                                                @endphp
+
                                                 @for ($set_no = 1; $set_no <= $set[$j][$i][$item->id]; $set_no++)
                                                     @isset($set_ans[$j][$i][$item->id][$set_no])
                                                         @if ($set_no == 1)

@@ -204,6 +204,17 @@
         .dataTables_scrollBody {
             overflow: visible !important;
         }
+
+        .analytics-weeks{
+            color: white !important;
+            background-color: red !important;
+        }
+
+        .analytics-head{
+            color: white !important;
+            background-color: rgb(46, 39, 39) !important;
+            padding-left: 10px !important;
+        }
     </style>
 
 </head>

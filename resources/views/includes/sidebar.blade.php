@@ -270,6 +270,25 @@
                      </div>
                      <!--end::Col-->
 
+                      <!--begin::Col-->
+                      <div class="col mb-4">
+                        <!--begin::Link-->
+                        <a href="{{ route('client.analytics.index') }}"
+                            class="btn btn-icon btn-outline btn-bg-light btn-active-light-primary btn-flex flex-column flex-center w-90px h-90px border-gray-200 menu-link"
+                            data-kt-button="true">
+                            <!--begin::Icon-->
+                            <span class="mb-2">
+                                <i class="fa-solid fa-computer fs-2"></i>
+                            </span>
+                            <!--end::Icon-->
+                            <!--begin::Label-->
+                            <span class="fs-7 fw-bold">Analitics</span>
+                            <!--end::Label-->
+                        </a>
+                        <!--end::Link-->
+                    </div>
+                    <!--end::Col-->
+
 
 
 
@@ -325,7 +344,7 @@
                                 <!--begin::Content-->
                                 <div class="me-5">
                                     <!--begin::Title-->
-                                    <a href="{{$notification->url}}" class="text-gray-800 fw-bold text-hover-primary fs-6">{{$notification->name}}</a>
+                                    <a href="{{notificationWhereToGo($notification->notification_type)}}" class="text-gray-800 fw-bold text-hover-primary fs-6">{{$notification->name}}</a>
                                     <!--end::Title-->
                                     <!--begin::Desc-->
                                     <span class="text-gray-400 fw-semibold fs-7 d-block text-start ps-0">{{$notification->message}}</span>
