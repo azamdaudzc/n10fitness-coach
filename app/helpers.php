@@ -44,10 +44,10 @@ function notificationWhereToGo($type){
             $url=route('warmup.builder.index').'?goto=3';
             break;
         case 'CoachClientAssigned':
-            $url=route('user.coach.index');
+            $url=url('/');
             break;
         case 'CoachClientRemoved':
-            $url=route('user.coach.index');
+            $url=url('/');
             break;
         case 'ProgramDayCompleted':
             $url=route('program.builder.index');

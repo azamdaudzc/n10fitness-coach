@@ -27,7 +27,8 @@ class ClientReportsController extends Controller
 
     function exercise_summary_report($id = 0){
             $data['categories']=ExerciseCategory::all();
-            $user_program=UserProgram::where('id',$id)->where('assigned_by',Auth::user()->id)->get()->first();//this will be user wise
+            $user_program=UserProgram::where('id',$id)->where('assigned_by',Auth::user()->id)->with('user','program')->get()->first();//this will be user wise
+            $data['user_program']=$user_program;
             $id=$user_program->program_builder_id;
             $data['program'] = ProgramBuilder::find($id);
             $weeks = ProgramBuilderWeek::where('program_builder_id',$id)->get();
@@ -41,7 +42,7 @@ class ClientReportsController extends Controller
                         # code...
                         $set=   ProgramBuilderDayExerciseSet::where('program_week_days',$week_day_exercise->id)->get()->first();
                          $data['set'][$week->week_no][$day->day_no][$week_day_exercise->id]= $set->set_no;
-                        for ($i=1; $i <= $set->set_no; $i++) { 
+                        for ($i=1; $i <= $set->set_no; $i++) {
                             # code...
                                 // $data['temp'][$day->day_no][$week->week_no][$i]
                             $set_answer=ProgramBuilderDayExerciseInput::where('day_exercise_id',$week_day_exercise->id)
@@ -55,5 +56,5 @@ class ClientReportsController extends Controller
             }
             return view('N10Pages.Reports.exercise-summary-report')->with($data);
         }
-    
+
 }

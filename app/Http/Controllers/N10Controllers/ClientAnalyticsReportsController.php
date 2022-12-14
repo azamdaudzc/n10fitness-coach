@@ -23,14 +23,15 @@ use App\Models\ProgramBuilderDayExerciseInput;
 class ClientAnalyticsReportsController extends Controller
 {
     function index(){
-        $programs=UserProgram::where('assigned_by','=',Auth::user()->id)->with('user')->get();
+        $programs=UserProgram::where('assigned_by','=',Auth::user()->id)->with('user','program')->get();
         // return $programs;
         return view('N10Pages.Analyics.index',compact('programs'));
     }
 
     function analytics_summary_report($id = 0){
             $data['categories']=ExerciseCategory::all();
-            $user_program=UserProgram::where('id',$id)->where('assigned_by',Auth::user()->id)->get()->first();//this will be user wise
+            $user_program=UserProgram::where('id',$id)->where('assigned_by',Auth::user()->id)->with('user','program')->get()->first();//this will be user wise
+            $data['user_program']=$user_program;
             $id=$user_program->program_builder_id;
             $data['program'] = ProgramBuilder::find($id);
             $weeks = ProgramBuilderWeek::where('program_builder_id',$id)->get();
@@ -108,12 +109,15 @@ class ClientAnalyticsReportsController extends Controller
                         ->where('program_builder_id',$id)
                         ->where('user_program',$user_program->id)
                         ->where('set_no',$i)->get()->first();
-                        if($set_answer->rep_no > 5){
+                       if($set_answer){
+
+                        if($set_answer->reps > 5){
                             $hyper+=1;
                         }
-                        else{
+                        else if($set_answer->reps > 0 && $set_answer->reps <= 5){
                             $strength+=1;
                         }
+                    }
                     }
                 }
                 if($day->client_weight>0)

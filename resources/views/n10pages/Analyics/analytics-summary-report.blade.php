@@ -12,7 +12,21 @@
 </style>
     <div id="kt_app_content" class="app-content flex-column-fluid">
         <div id="kt_app_content_container" class="app-container container-xxl">
+            <div class="mt-5 border p-6" style="border-radius: 10px">
+                    <div class="d-flex justify-content-between">
+                        <div class="text-body fs-5"><strong>Name: </strong>{{$user_program->user->first_name}} {{$user_program->user->last_name}}
+                        </div>
+                        <div>
+                            <ul style="list-style: none">
+                                <li class="text-body"><strong>Program: </strong>{{$user_program->program->title}}</li>
+                                <li class="text-body"> <strong>Age: </strong>{{$user_program->user->age}}</li>
+                                <li class="text-body"><strong>Height: </strong>{{$user_program->user->height}}</li>
 
+                            </ul>
+                        </div>
+                    </div>
+
+            </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card">
