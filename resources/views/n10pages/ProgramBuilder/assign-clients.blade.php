@@ -5,7 +5,8 @@
         <!--begin::Content container-->
         <div id="kt_app_content_container" class="app-container container-xxl">
             <!--begin::Layout-->
-            <div class="d-flex flex-column flex-lg-row">
+           <label for=""><strong>Program: </strong>{{$program->title}}</label>
+            <div class="d-flex flex-column flex-lg-row mt-5">
                 <!--begin::Sidebar-->
                 <!--begin::Card-->
                 <div class="card pt-4 mb-6 mb-xl-9 col-12">

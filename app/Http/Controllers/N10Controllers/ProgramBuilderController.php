@@ -66,6 +66,7 @@ class ProgramBuilderController extends Controller
     public function assign_clients($id = 0)
     {
         $data['program_id'] = $id;
+        $data['program']=ProgramBuilder::find($id);
         $data['all_users']
             = ClientCoach::with('user.userAthleticType')->where('coach_id', Auth::user()->id)->get();
         return view('N10Pages.ProgramBuilder.assign-clients')->with($data);
