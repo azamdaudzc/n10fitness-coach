@@ -40,6 +40,7 @@
                         <!--end::Engage widget 12-->
                     </div>
                     <!--end::Col-->
+                    @if($users->count() >0)
 
                     <div class="col-xl-8 mb-5 mb-xl-10">
                         <!--begin::Table widget 6-->
@@ -181,6 +182,7 @@
                         </div>
                         <!--end::Table widget 6-->
                     </div>
+                    @endif
 
                 </div>
                 <!--end::Row-->

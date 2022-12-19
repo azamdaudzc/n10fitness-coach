@@ -78,6 +78,9 @@ class ProgramBuilderController extends Controller
         if (UserProgram::where('program_builder_id', $request->program_id)->where('assigned_by',Auth::user()->id)->where('user_id', $request->client_id)->exists()) {
             return response()->json(['success' => false, 'msg' => 'Client Already Attached']);
         }
+        if (UserProgram::where('user_id', $request->client_id)->where('is_completed',null)->exists()) {
+            return response()->json(['success' => false, 'msg' => 'Client Already Attached To Another Program']);
+        }
         UserProgram::create([
             'program_builder_id' => $request->program_id,
             'user_id' => $request->client_id,

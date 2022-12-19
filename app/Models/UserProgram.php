@@ -17,6 +17,6 @@ class UserProgram extends Model
     }
 
     public function program(){
-        return $this->hasOne('\App\Models\ProgramBUilder','id','program_builder_id');
+        return $this->hasOne('\App\Models\ProgramBuilder','id','program_builder_id');
     }
 }

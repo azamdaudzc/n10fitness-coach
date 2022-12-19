@@ -26,7 +26,7 @@ class ClientReportsController extends Controller
     }
 
     function exercise_summary_report($id = 0){
-            $data['categories']=ExerciseCategory::all();
+            $data['categories']=collect();
             $user_program=UserProgram::where('id',$id)->where('assigned_by',Auth::user()->id)->with('user','program')->get()->first();//this will be user wise
             $data['user_program']=$user_program;
             $id=$user_program->program_builder_id;
@@ -37,6 +37,13 @@ class ClientReportsController extends Controller
                 foreach ($week_day as $day) {
                     // $data['temp'][$day->day_no][$week->week_no]
                     $week_day_exercises=ProgramBuilderDayExercise::where('builder_week_day_id',$day->id)->with('exerciseLibrary.exerciseCategory')->get();
+
+                    foreach ($week_day_exercises as $for_cat) {
+                        if (!$data['categories']->contains('id', $for_cat->exerciseLibrary->exerciseCategory->id)) {
+                            $data['categories']->push($for_cat->exerciseLibrary->exerciseCategory);
+                        }
+                    }
+
                     $data['exercises_report'][$week->week_no][$day->day_no]= $week_day_exercises;
                     foreach ($week_day_exercises as  $week_day_exercise) {
                         # code...
